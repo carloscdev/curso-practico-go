@@ -1,0 +1,1065 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Clase 4: Programación orientada a objetos en Go</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body style="padding: 0 1rem;"><article id="7c76e545-d54a-45e8-8ab1-21d87ac69539" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">4️⃣</span></div><h1 class="page-title">Clase 4: Programación orientada a objetos en Go</h1><p class="page-description"></p></header><div class="page-body"><hr id="1fb0a3a5-8e8b-4a1e-a3ac-442577d83d10"/><details open><summary style="font-weight:600;font-size:1.5em;line-height:1.3;margin:0">Objetivos</summary><div class="indented"><ol type="1" id="be6c5ba8-4053-4cc7-af43-4e4ffa5fe52f" class="numbered-list" start="1"><li>Comprender los cuatro principios fundamentales de la programación orientada a objetos (abstracción, encapsulamiento, herencia y polimorfismo) y su aplicación en el lenguaje de programación Go.</li></ol><ol type="1" id="0f62769e-d30a-482f-b689-6bd6e4117568" class="numbered-list" start="2"><li>Escribir un programa en Go que utilice estructuras (structs) para definir un tipo de dato personalizado, implemente métodos para manipular ese tipo de dato y utilice interfaces para permitir la interoperabilidad con otros tipos de datos.</li></ol><ol type="1" id="327e0e94-d19a-4d17-a8e7-b884b08f58c4" class="numbered-list" start="3"><li>Utilizar la composición para construir una estructura compleja a partir de estructuras más simples, aplica el encapsulamiento para restringir el acceso a ciertos campos y métodos, y utiliza el polimorfismo a través de interfaces para permitir que diferentes tipos implementen un conjunto común de métodos.</li></ol></div></details><hr id="9f063877-8406-4d45-9af9-d6a02cfd2297"/><h2 style="margin-bottom: 1rem;" id="95276313-c81f-4e8f-9962-d7fc8fc46212" class="">Contenido de la clase:</h2><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">1. Conceptos básicos de programación orientada a objetos</summary><div class="indented"><p id="0cfee960-e9a4-4623-9464-35123c554031" class="">La programación orientada a objetos (POO) es un paradigma de programación que se basa en la idea de estructurar el código en torno a objetos que representan entidades del mundo real.</p><ol type="1" id="db25c88a-e89b-47de-804d-71959e91b66f" class="numbered-list" start="1"><li><strong>Encapsulación</strong><p id="7cbf7ea1-9b56-4b1f-8c9d-5f065f20b840" class="">Es un principio de la programación orientada a objetos que consiste en ocultar los detalles internos de un objeto y proporcionar una interfaz controlada para interactuar con él. Es decir, se busca limitar el acceso directo a los datos y métodos internos de un objeto y en su lugar, se utilizan métodos públicos para interactuar con él.</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="927ba031-7ba3-4876-9722-6b03e662d038"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">La encapsulación contiene toda la información importante de un objeto dentro del mismo y solo expone la información seleccionada al mundo exterior.</div></figure></li></ol><ol type="1" id="28e9dadf-03bf-4aca-84a1-6e44e40666ac" class="numbered-list" start="2"><li><strong>Abstracción</strong><p id="fbb58fcc-bbb2-4091-9dd4-e824c6ede5fb" class="">Este concepto está muy relacionado con el anterior</p><p id="58bea4c6-5c5d-41ec-9f68-ff9c802cf51a" class="">Como la propia palabra indica, el principio de abstracción lo que implica es que la clase debe representar las características de la entidad hacia el mundo exterior, pero ocultando la complejidad que lleva. O sea, nos abstrae de la complejidad que haya dentro dándonos una serie de atributos y comportamientos que podemos usar sin preocuparnos de qué pasa por dentro cuando lo hagamos.</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="f06ad9b9-e97c-4b09-ab27-3cdba9ffc7b4"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">La abstracción está muy relacionada con la encapsulación, pero va un paso más allá pues no sólo controla el acceso a la información, sino también oculta la complejidad de los procesos que estemos implementando.</div></figure></li></ol><ol type="1" id="3c5840ae-a879-46e3-a35d-63437bdb8b9d" class="numbered-list" start="3"><li><strong>Herencia</strong><p id="17429c1d-485d-42a6-8091-41f39e67e026" class="">La herencia permite que se puedan definir nuevas clases basadas de unas ya existentes a fin de reutilizar el código, generando así una jerarquía de clases dentro de una aplicación. Si una clase deriva de otra, esta hereda sus atributos y métodos y puede añadir nuevos atributos, métodos o redefinir los heredados.</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="ca6f444e-7b7b-47e5-a5e0-b1b73f3b7f70"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">Permite crear nuevas clases basadas en clases existentes.</div></figure></li></ol><ol type="1" id="83b6c1cc-a2f6-44a9-bcdf-af5ced9228dc" class="numbered-list" start="4"><li><strong>Polimorfismo</strong><p id="a014daeb-0c7e-48ba-b6cf-19a5fe5dc391" class="">Es la capacidad de un objeto para tomar diferentes formas o comportarse de diferentes maneras.</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="2fac093f-0959-4e50-8bd4-4aa58ba761ad"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">Permite que objetos de diferentes clases respondan de manera distinta a un mismo mensaje ó método, lo que facilita la flexibilidad del código.</div></figure></li></ol><p id="a965cb28-afac-40e7-b1f6-14eeebf9f430" class=""><span style="border-bottom:0.05em solid"><strong>¿Por qué la programación orientada a objetos?</strong></span></p><p id="2291f95b-f724-4dd6-a524-01cd93899492" class="">Permite que el código sea reutilizable, organizado y sencillo de mantener. Sigue el principio de desarrollo de software DRY (Don’t Repeat Yoursealf), para no duplicar código y crear programas eficientes. Asimismo previene el acceso no deseado a los datos o la exposición de código propietario a través de la encapsulación y la abstracción.</p><p id="4a15441b-9f05-4031-a7d8-06454bfe0a2a" class=""><span style="border-bottom:0.05em solid"><strong>¿Es Go un lenguaje de programación orientado a objetos?</strong></span></p><p id="140b17f0-fed1-4c38-80d3-21c7911463d2" class="">Go es un lenguaje de programación que admite la programación orientada a objetos de manera limitada en comparación a otros lenguajes de programación como Java.</p><p id="43c416fe-90b8-40b4-a0c0-f051920898f5" class=""><a href="https://go.dev/doc/faq#Is_Go_an_object-oriented_language">https://go.dev/doc/faq#Is_Go_an_object-oriented_language</a></p><p id="d5ae62e3-fcfb-4128-a8e8-bd18495bebe6" class=""><a href="https://blog.friendsofgo.tech/posts/es_go_un_lenguaje_orientado_a_objetos/">https://blog.friendsofgo.tech/posts/es_go_un_lenguaje_orientado_a_objetos/</a></p><p id="46c37bc5-54b9-48d6-9f5e-1566918ebc61" class=""><strong><span style="border-bottom:0.05em solid">¿Cómo es la programación orientada a objetos en Go?</span></strong></p><p id="71347ace-f120-40dc-9da5-a7b623200bb1" class="">A diferencia de lenguajes explícitamente orientados a objetos como Java, en Go no existen las clases, ni los objetos, ni la herencia de clases.</p><p id="5c59928b-973e-402d-963f-4dabf9ea65e2" class="">Existen tipos de datos definidos por el usuario a los cuales se les puede incorporar comportamientos.</p><p id="f64bbb45-0911-42bd-ba4a-d8e342452263" class="">En una analogía con una clase, las propiedades pudieran ser los tipos de datos de una estructura, y los métodos las funciones o comportamientos asociados al tipo de dato.</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="6e9e431d-ec63-462f-b32b-cc04c9cd7ac3"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">Cuando se habla de objetos en Go, generalmente se utiliza de manera informal para referirse a las instancias de una estructura (struct). Aunque técnicamente Go no tiene una representación nativa de objetos como en otros lenguajes de programación orientado a objetos, el término objeto se utiliza a menudo como una forma conveniente de describir una instancia de una estructura en Go.</div></figure></div></details><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">2. Definición de estructuras (structs), métodos e interfaces</summary><div class="indented"><p id="5e0ed4d4-c526-4a4e-bb78-d325f40c0113" class="">En Go, las clases no existen como un concepto independiente como lo hacen en otros lenguajes de programación orientados a objetos. Sin embargo, es posible lograr funcionalidad similar a las clases utilizando structs y métodos asociados a ellos.</p><ul id="87ff2064-d297-4d58-a878-f01aee8a3740" class="toggle"><li><details ><summary><span style="border-bottom:0.05em solid"><strong>Structs</strong></span></summary><p id="9057dbec-2293-4cd4-b67c-35b43ecfbbac" class="">Es un tipo de dato que permite agrupar varios valores de diferentes tipos en una sola estructura. Los valores se llaman campos y cada campo tiene un nombre y un tipo.</p><p id="40947f99-168e-4134-9fe7-a5d19fff7eab" class="">Son útiles para agrupar datos relacionados en una sola estructura de datos y proporcionar una manera organizada y eficiente de trabajar con ellos.</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="bb35bfb8-a819-4703-a604-0e8ea26663c3"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">En resumen, los structs en Go son una herramienta muy importante para organizar y manejar datos de manera eficiente y legible en tu código, y son esenciales para crea aplicaciones complejas y escalables.</div></figure><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="ded34d38-a866-4aa9-ae93-313614d29e8a" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+// Struct global
+type Person struct {
+	name string
+	age  int
+}
+
+func main() {
+	// Instanciar un struct
+	carlos := Person{name: &quot;Carlos&quot;}
+	carlos.age = 26
+	fmt.Printf(&quot;%+v&quot;, carlos)
+}</code></pre></details></li></ul><ul id="29bd984e-cf30-4e71-911d-719e9d5611c6" class="toggle"><li><details ><summary><span style="border-bottom:0.05em solid"><strong>Métodos</strong></span></summary><p id="cb94679c-2211-48ab-8a96-47e70fd9aeb9" class="">En Go, los métodos son funciones asociadas a un tipo de dato específico. Se definen y se declaran dentro del alcance de un tipo, lo que permite que ese tipo tenga comportamientos específicos asociados a él. Los métodos son una forma de extender la funcionalidad de los tipos de datos y proporcionan una forma de realizar operaciones o acciones relacionadas con ese tipo.</p><p id="9b89bf72-9326-47e5-ae8e-404aed8d3e8a" class="">Los métodos en Go se definen utilizando una función con un receptor (receiver) asociado al tipo en el que se definen. El receptor es un parámetro especial que permite que el método sea invocado en una instancia particular del tipo. El receptor se coloca antes del nombre de la función y puede ser un valor o un puntero al tipo.</p><p id="e331352c-08da-4ad1-980e-f9b3b8740332" class="">Hay dos tipos de receptores en Go:</p><ol type="1" id="16adfd6f-27e5-4d1a-b684-801784fab8ba" class="numbered-list" start="1"><li>Receptor de valor (value receiver): El método actúa sobre una copia del valor del receptor. Se utiliza cuando no se necesita modificar el valor del receptor.</li></ol><ol type="1" id="b14ce34a-bac9-4f08-9ac4-c023ffadf386" class="numbered-list" start="2"><li>Receptor de puntero (pointer receiver): El método actúa directamente sobre el valor del receptor a través de un puntero. Se utiliza cuando se desea modificar el valor del receptor.</li></ol><p id="7667820c-7086-4000-9c1e-d9552a81b3cb" class="">1. Declaramos una struct Person</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="c8cf5135-7984-476e-b864-4f1b27c22486" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+// Struct global
+type Person struct {
+	name string
+	age  int
+}</code></pre><ol type="1" id="bbaf5b6f-6532-492e-8b7a-71acedca5a5c" class="numbered-list" start="2"><li>Delcaración de métodos</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="30ad69eb-9eb7-49ad-9acc-8d2555bd2eb8" class="code"><code class="language-Go">// Receptor de puntero
+func (p *Person) setName(name string) {
+	p.name = name
+}
+
+// Receptor de valor
+func (p Person) getName() string {
+	return p.name
+}
+
+// Receptor de puntero
+func (p *Person) setAge(age int) {
+	p.age = age
+}
+
+// Receptor de valor
+func (p Person) getAge() int {
+	return p.age
+}
+
+func (p Person) toString() string {
+	return fmt.Sprintf(&quot;*** Nombre: %s, Edad: %d ***&quot;, p.getName(), p.getAge())
+}</code></pre><ol type="1" id="4d0b6c33-c03b-4230-8384-8f02326a3c1e" class="numbered-list" start="3"><li>Instanciamos Person y utilizamos los métodos</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="60db0bc6-6cef-4cab-9a71-f1f0dd6f2c50" class="code"><code class="language-Go">func main() {
+	// Creación de una instancia del tipo Person
+	carlos := Person{}
+	// Llamada a los métodos del tipo Person
+	carlos.setName(&quot;Carlos&quot;)
+	carlos.setAge(26)
+	fmt.Println(&quot;Mi nombre es:&quot;, carlos.getName())
+	fmt.Println(&quot;Mi edad es: &quot;, carlos.getAge())
+	fmt.Println(carlos.toString())
+}</code></pre><ol type="1" id="ffd0dc95-9b01-4d4e-8909-1fe8c108d345" class="numbered-list" start="4"><li>Resultado final</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="f18a33e1-491b-40b3-990f-ab56c9f8cc94" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+type Person struct {
+	name string
+	age  int
+}
+
+func (p *Person) setName(name string) {
+	p.name = name
+}
+
+func (p *Person) setAge(age int) {
+	p.age = age
+}
+
+func (p Person) getName() string {
+	return p.name
+}
+
+func (p Person) getAge() int {
+	return p.age
+}
+
+func (p Person) toString() string {
+	return fmt.Sprintf(&quot;*** Nombre: %s, Edad: %d ***&quot;, p.getName(), p.getAge())
+}
+
+func main() {
+	carlos := Person{}
+	carlos.setName(&quot;Carlos&quot;)
+	carlos.setAge(26)
+	fmt.Println(&quot;Mi nombre es:&quot;, carlos.getName())
+	fmt.Println(&quot;Mi edad es: &quot;, carlos.getAge())
+	fmt.Println(carlos.toString())
+}</code></pre><p id="45395eed-cf64-4670-acad-46372ba5ef5f" class="">En Go, es posible definir métodos no solo para structs, si no también para tipos de datos básicos y personalizados, como enteros, cadenas de texto y otros tipos definidos por el usuario utilizando la palabra clave <code>type</code>.</p><p id="047d893f-fcc8-4a67-95c7-543312684ef9" class="">Esto se logra mediante la definición de un tipo nuevo basado en un tipo existente y la declaración de métodos asociados a ese nuevo tipo. A este proceso se le conoce como “receptor con nombre” (named receiver) en Go.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="c1970b7e-c411-4703-bae8-4eb17bc904ec" class="code"><code class="language-Go">package main
+import (
+	&quot;fmt&quot;
+	&quot;strings&quot;
+)
+
+// Definición de un tipo nuevo basado en un tipo existente (string)
+type MyString string
+
+// Método asociado al tipo MyString: cuenta el número de caracteres en la cadena
+func (m MyString) length() int {
+	return len(m)
+}
+
+// Método asociado al tipo MyString: convierte la cadena en mayúsculas
+func (m MyString) toUpper() string {
+	return strings.ToUpper(string(m))
+}
+
+func main() {
+	text := MyString(&quot;Hola, mundo!&quot;)
+
+	// Llamada a los métodos asociados al tipo MyString
+	length := text.length()
+	fmt.Println(&quot;Número de caracteres:&quot;, length)
+
+	textUpper := text.toUpper()
+	fmt.Println(&quot;Cadena en mayúsculas:&quot;, textUpper)
+}</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="11fbd63f-a755-4b2c-964f-9d1d0d1261c5" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+// Definición de un tipo nuevo basado en int
+type MyInt int
+
+// Método asociado al tipo MyInt: verifica si el entero es par
+func (i MyInt) IsEven() bool {
+	return i%2 == 0
+}
+
+// Método asociado al tipo MyInt: duplica el valor del entero
+func (i MyInt) Double() MyInt {
+	return i * 2
+}
+
+func main() {
+	number := MyInt(7)
+
+	// Llamada a los métodos asociados al tipo MyInt
+	fmt.Println(&quot;¿Es par?&quot;, number.IsEven())
+
+	double := number.Double()
+	fmt.Println(&quot;Valor double:&quot;, double)
+}</code></pre></details></li></ul><ul id="7f32305b-5a49-44a3-8cfc-c02d20a238bb" class="toggle"><li><details ><summary><span style="border-bottom:0.05em solid"><strong>Interfaces</strong></span></summary><p id="549a9288-ec87-4527-ac29-f84df98651dc" class="">Las interfaces en Go son un tipo de dato que se usa para representar el comportamiento de otros tipos. Una interfaz es como un plano técnico o un contrato que un objeto debe cumplir. Cuando se usan interfaces, el código base se vuelve más flexible y adaptable, porque se escribe código que no está vinculado a una implementación concreta. Por tanto, se puede extender la funcionalidad de un programa rápidamente.</p><p id="38f974fb-fd34-40a7-87ad-420ce7d9c5a7" class="">A diferencia de las interfaces de otros lenguajes de programación, en Go son de forma implícita. Go no ofrece palabras clave para implementar una interfaz (e.g. implements).</p><ol type="1" id="5823aaa7-907f-4acd-9cb2-01f92fef24a7" class="numbered-list" start="1"><li>Declaración de una interfaz</li></ol><p id="d345f168-a7b2-4eef-b93e-e616844eab4c" class="">Una interfaz en Go es como un plano técnico. Un tipo abstracto que solo incluye los métodos que un tipo concreto debe poseer o implementar.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="d80f1576-8f9f-47cf-b08d-28d44260a0f1" class="code"><code class="language-Go">package main
+
+type Shape interface {
+	Perimeter() float64
+	Area() float64
+}</code></pre><ol type="1" id="d93949d1-d6a4-4ec9-afc5-d8636534ac23" class="numbered-list" start="2"><li>Implementar una interfaz</li></ol><p id="5cd518c2-54a3-4162-96b0-b295a0f57951" class="">Como se mencionó anteriormente, en Go no hay una palabra clave para implementar una interfaz. Un tipo cumple de forma implícita una interfaz en Go cuando tiene todos los métodos que necesita una interfaz.</p><p id="7959bea3-3c19-4fb2-8f6e-512920c586b3" class="">Ahora se creará una struct Square que tenga los dos métodos de la interfaz Shape.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="b30baf4e-29b4-477d-9400-c0b4686cdfc7" class="code"><code class="language-Go">type Square struct {
+	size float64
+}
+
+func (s Square) Area() float64 {
+	return s.size * s.size
+}
+
+func (s Square) Perimeter() float64 {
+	return s.size * 4
+}
+
+func main() {
+	// Instanciamos Square
+  var s Shape = Square{3}
+  fmt.Printf(&quot;%T\n&quot;, s)
+  fmt.Println(&quot;Area: &quot;, s.Area())
+  fmt.Println(&quot;Perimeter:&quot;, s.Perimeter())
+}</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="4735ff96-5c40-4d3a-95e7-4ddcc66282bb" class="code"><code class="language-Go">type Circle struct {
+    radius float64
+}
+
+func (c Circle) Area() float64 {
+    return math.Pi * c.radius * c.radius
+}
+
+func (c Circle) Perimeter() float64 {
+    return 2 * math.Pi * c.radius
+}
+
+func main() {
+	// Instanciamos Square
+  var s Shape = Square{3}
+  fmt.Printf(&quot;%T\n&quot;, s)
+  fmt.Println(&quot;Area: &quot;, s.Area())
+  fmt.Println(&quot;Perimeter:&quot;, s.Perimeter())
+
+	// Instanciamos Circle
+  c := Circle{6}
+  fmt.Printf(&quot;%T\n&quot;, c)
+  fmt.Println(&quot;Area: &quot;, c.Area())
+  fmt.Println(&quot;Perimeter:&quot;, c.Perimeter())
+}</code></pre><p id="a4706d71-15cc-4246-85e0-6e9c3abbee7e" class="">Ahora se refactorizará la función <code>main</code> y se creará una función para imprimir el tipo del objeto que recibe, junto con su área y perímetro.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="89c85777-2b8c-497f-99d7-765d2bd36747" class="code"><code class="language-Go">func printInformation(s Shape) {
+	// Tipo de dato
+	fmt.Printf(&quot;%T\n&quot;, s)
+	// Área
+	fmt.Println(&quot;Area: &quot;, s.Area())
+	// Perímetro
+	fmt.Println(&quot;Perimeter:&quot;, s.Perimeter())
+	// Salto de línea
+	fmt.Println()
+}</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="3ff2db6f-6fb2-444d-aa71-811b4178b7cb" class="code"><code class="language-Go">func main() {
+    var s Shape = Square{3}
+    printInformation(s)
+
+    c := Circle{6}
+    printInformation(c)
+}</code></pre></details></li></ul><ul id="82441b55-0c5c-44bd-a2d2-80d379a5dc75" class="toggle"><li><details ><summary><span style="border-bottom:0.05em solid"><strong>Constructores [Extra]</strong></span></summary><p id="8683b9bc-5068-49c4-b447-168d5b6ac0a5" class="">Go <strong>no tiene un mecanismo similar a los constructores de otros lenguajes orientados a objetos</strong>. Pero, es bastante común crear una función que los emule, devuelviendo un objeto ya inicializado con los parámetros que querramos aplicar.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="412b10bc-0e48-4cea-8e83-4897c4e43cf6" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+type Person struct {
+	name string
+	age int
+	active bool
+}</code></pre><ol type="1" id="ac900fa2-999e-4876-9e39-c451b207b619" class="numbered-list" start="1"><li>Crear un <code>struct</code> con valores <code>zero</code> por defecto.</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="6df3899f-109f-400c-9fe7-b96cbba2faa0" class="code"><code class="language-Go">func main() {
+	p := Person{}
+	fmt.Println(p)
+}</code></pre><ol type="1" id="1e879dbb-32a9-4bc7-9694-0a435dbbfaa8" class="numbered-list" start="2"><li>Asignarle valores a las propiedades.</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="9f3fdb5f-c513-496c-aaeb-1ff5da29b2c6" class="code"><code class="language-Go">func main() {
+	p := Person{name: &quot;Carlos&quot;, age: 26, active: true}
+	fmt.Println(p)
+}</code></pre><ol type="1" id="b231daa7-ab46-4ea9-8d29-20ca12cdd27e" class="numbered-list" start="3"><li>Usando la palabra reservada <code>new</code>:  Regresa una referencia de memoria a la instancia creada, para acceder al valor usamos el  operador <code>*</code></li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="20c699ab-03a7-49cc-85f6-4064d992c6eb" class="code"><code class="language-Go">func main() {
+	p := new(Person)
+	fmt.Println(p)
+}</code></pre><ol type="1" id="942cf158-4418-421b-8c03-db8a094c3fe1" class="numbered-list" start="4"><li>Crear una función que actúe como método constructor: La función regresa con <code>&amp;</code> para que regresa la referencia de memoria y no una copia de la <code>struct</code>.</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="ebd66f25-ecb3-4c08-9dea-4faec23bbc98" class="code"><code class="language-Go">func NewPerson(name string, age int, active bool) Person {
+	return Person{
+		name:   name,
+		age:    age,
+		active: active,
+	}
+}
+
+func main() {
+	p := NewPerson(&quot;Carlos&quot;, 26, true)
+	fmt.Println(p)
+}</code></pre></details></li></ul></div></details><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">3. Composición, encapsulamiento y polimorfismo en Go</summary><div class="indented"><ul id="66639745-0d21-4933-b027-27545a6ca7b0" class="toggle"><li><details ><summary><span style="border-bottom:0.05em solid"><strong>Composición</strong></span></summary><p id="22f2d2bf-b1e0-407f-9818-ec059ca94889" class="">En Go no existe la herencia, en su lugar, Go utiliza la composición como un enfoque para la reutilización de código y la construcción de relaciones entre tipos de datos</p><p id="81647b4b-d1fc-4e44-8046-f59ee67032e5" class="">La composición es un concepto en la programación orientada a objetos que permite construir objetos complejos combinando o &quot;componiendo&quot; varios objetos más simples. En lugar de heredar directamente características de una clase base, la composición utiliza objetos como componentes para construir una clase más grande y más especializada.</p><p id="11fbf1cf-7c74-4881-be7a-2434c35588a7" class="">En Go, la composición se logra mediante la inclusión de un tipo de estructura dentro de otra estructura como un campo. Esto permite que los campos y métodos del tipo incluido estén disponibles en el tipo que lo contiene.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="ffc77f0a-5670-477a-945e-5e703b2aa620" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+// Definición de la estructura &quot;Engine&quot;
+type Engine struct {
+	Type     string
+	Potencia int
+}
+
+// Definición de la estructura &quot;Car&quot; que utiliza composición para incluir un &quot;Engine&quot;
+type Car struct {
+	Model  string
+	Color  string
+	Engine Engine // Campo &quot;Engine&quot; como parte de la composición
+}
+
+func main() {
+	// Creación de un objeto &quot;Engine&quot;
+	engine := Engine{Type: &quot;Gasolina&quot;, Potencia: 150}
+
+	// Creación de un objeto &quot;Car&quot; que incluye el objeto &quot;Engine&quot;
+	car := Car{Model: &quot;Sedán&quot;, Color: &quot;Rojo&quot;, Engine: engine}
+
+	// Acceso a los campos del objeto &quot;Car&quot;
+	fmt.Println(&quot;Modelo:&quot;, car.Model)
+	fmt.Println(&quot;Color:&quot;, car.Color)
+
+	// Acceso a los campos y métodos del objeto &quot;Engine&quot; a través del objeto &quot;Car&quot;
+	fmt.Println(&quot;Tipo de motor:&quot;, car.Engine.Type)
+	fmt.Println(&quot;Potencia del motor:&quot;, car.Engine.Potencia)
+}</code></pre></details></li></ul><ul id="f300f6fb-e5dc-4300-aadb-f2e02ea19c44" class="toggle"><li><details ><summary><span style="border-bottom:0.05em solid"><strong>Encapsulamiento</strong></span></summary><p id="ff32c2bc-c81c-4c45-9a64-02da4d87bef6" class="">El encapsulamiento permite proteger los datos internos de un objeto y garantizar que solo puedan ser modificados a través de métodos específicos. Esto ayuda a mantener la integridad de los datos y facilita el mantenimiento y la evolución del código.</p><p id="cb3b57cc-ac9d-49c0-af32-3551443b6823" class="">En Go no existen identificadores de privacidad tales como public, protected y pirvate típicos de otros lenguajes de programación. Go encapsula tipos de datos y funciones a nivel de paquetes en base a convenciones de nombres.</p><p id="a45d4247-e45b-4de7-9f03-0a8c9d8b7d92" class="">Todos aquellos nombres que empiecen con mayúsculas serán accesibles (visibles) desde otros paquetes. Por el contrario aquellos que comiencen con minúsculas serán privados.</p><ol type="1" id="7fea5cb3-b0f2-438e-aa84-19074e883ba1" class="numbered-list" start="1"><li>Estructura del proyecto</li></ol><figure id="61db15d5-b5f0-46ed-a719-5e4e6191f812" class="image"><a href="./assets/clase-4/estructura.png"><img style="width:430px" src="./assets/clase-4/estructura.png"/></a></figure><ol type="1" id="29c63d4d-86a9-4518-b3b8-c63d2a11eae3" class="numbered-list" start="2"><li>Archivo main.go</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="c6514f78-2293-409b-933e-ee7f33799d24" class="code"><code class="language-Go">package main
+
+import (
+	. &quot;curso-practico-go/poo/person&quot;
+	&quot;fmt&quot;
+)
+
+func main() {
+	// Creación de un objeto &quot;Persona&quot;
+	persona := Persona{}
+
+	// Establecer el nombre y la edad a través de los métodos de encapsulamiento
+	persona.SetNombre(&quot;Carlos&quot;)
+	persona.SetEdad(26)
+
+	// Obtener el nombre y la edad a través de los métodos de encapsulamiento
+	fmt.Println(&quot;Nombre:&quot;, persona.GetNombre())
+	fmt.Println(&quot;Edad:&quot;, persona.GetEdad())
+}</code></pre><ol type="1" id="4a2f67b9-3eaf-4aad-941d-a6647044b716" class="numbered-list" start="3"><li>Archivo person.go</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="56a9562e-b15f-41a1-9bd7-9ac5a5df616e" class="code"><code class="language-Go">package person
+
+// Definición de la estructura &quot;Persona&quot;
+type Persona struct {
+	nombre string
+	edad   int
+}
+
+// Método para establecer el nombre de la persona
+func (p *Persona) SetNombre(nombre string) {
+	p.nombre = nombre
+}
+
+// Método para obtener el nombre de la persona
+func (p Persona) GetNombre() string {
+	return p.nombre
+}
+
+// Método para establecer la edad de la persona
+func (p *Persona) SetEdad(edad int) {
+	p.edad = edad
+}
+
+// Método para obtener la edad de la persona
+func (p Persona) GetEdad() int {
+	return p.edad
+}</code></pre></details></li></ul><ul id="39d4c67e-1c19-482f-b890-f0ac4f0a2cb7" class="toggle"><li><details ><summary><span style="border-bottom:0.05em solid"><strong>Polimorfismo</strong></span></summary><p id="017df7ed-8d34-45f0-b3ed-d7f8f757c636" class="">En Go, el polimorfismo se logra mediante la implementación de interfaces. Una interfaz como ya vimos es una colección de métodos que se definen sin implementación. Una estructura o tipo de dato puede implementar una interfaz si proporciona una implementación para todos los métodos definidos en la interfaz.</p><ol type="1" id="e5c26e2a-0d0f-4493-ba3a-bf49521a8a5c" class="numbered-list" start="1"><li>Declaración de interfaz</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="22d921f4-7eee-4808-b066-1d5b92e7476b" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+// Declaramos una interfaz llamada Animal
+type Animal interface {
+	Sound() string
+}</code></pre><ol type="1" id="27a968ce-82cf-4933-87fa-257916ab6b45" class="numbered-list" start="2"><li>Declaramos los structs Dog y Cat</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="abd34ab8-54aa-415b-982a-0fd245a2c096" class="code"><code class="language-Go">// Declaramos el struct Dog
+type Dog struct {}
+
+// Declaramos el struct Cat
+type Cat struct {}</code></pre><ol type="1" id="44d8e41b-6cd5-4416-9962-b2ce369fe5c6" class="numbered-list" start="3"><li>Definimos los métodos para los structs</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="e855d9c3-ce78-4820-aa7d-15b9e0ac1915" class="code"><code class="language-Go">// Método para el struct Dog
+func (d Dog) Sound() string {
+	return &quot;Woof!&quot;
+}
+
+// Método para el struct Cat
+func (c Cat) Sound() string {
+	return &quot;Meow!&quot;
+}</code></pre><ol type="1" id="9bb8ed57-7659-417e-9ec3-ea3fa8af7ff3" class="numbered-list" start="4"><li>Utilizamos la interfaz creando una función</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="a8a783fb-1140-4953-aaf9-bc5ab9bf53d9" class="code"><code class="language-Go">func PrintSound(a Animal) {
+	fmt.Printf(&quot;%T \n&quot;, a)
+	fmt.Println(&quot;El sonido es:&quot;, a.Sound())
+}</code></pre><ol type="1" id="5b400096-3b99-4542-873d-71c7b9eedc90" class="numbered-list" start="5"><li>Instanciamos los structs y utilizamos la función PrintSound()</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="a60dd2b6-154c-4935-9e62-e8e842290ba1" class="code"><code class="language-Go">func main() {
+	// Instanciamos Cat
+	myCat := Cat{}
+	PrintSound(myCat)
+	// Instanciamos Dog
+	myDog := Dog{}
+	PrintSound(myDog)
+}</code></pre><ol type="1" id="60a2d3cc-4f91-4dd8-ae27-e6b19418dbf8" class="numbered-list" start="6"><li>Conclusión</li></ol><p id="304fe66e-165f-41f9-b321-b3a6e2ff16cf" class="">El polimorfismo nos permite tratar estos objetos de diferentes tipos de manera uniforme a través de la interfaz común. En el caso de <code>PrintSound()</code>, independientemente de si se le pasa un <code>Dog</code>o un <code>Cat</code> como argumento, puede llamar el método <code>Sound()</code> en el parámetro <code>a Animal</code>. Esto se debe a que <code>Dog</code> y <code>Cat</code> implementan la interfaz <code>Animal</code> y proporcionan una implementación del método <code>Sound()</code>. La función <code>PrintSound()</code> no necesita conocer el tipo subayacente real del objeto que recibe, solo necesita asegurarse de que se implemente la interfaz <code>Animal</code>.</p><p id="b9c2a57c-0818-4a16-8bc6-c7c775d47209" class="">El uso de interfaces y el polimorfismo nos permite escribir código más genérico y flexible, ya que nos permite tratar objetos de diferentes tipos de manera uniforme. A través de las interfaces, podemos definir un contrato común para múltiples tipos y escribir funciones que operen en esos tipos sin conocer su tipo subayacente real, lo que facilita la extensibilidad y reutilización del código.</p></details></li></ul></div></details><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">4. Tarea</summary><div class="indented"><ol type="1" id="54ea3cf2-c137-4f90-8b98-cc9b850d1a01" class="numbered-list" start="1"><li>Crear una struct &quot;Rectangle&quot; con métodos para calcular el área y el perímetro.</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="e209c920-214e-4915-acf4-fe60f334f9f1" class="code"><code class="language-Go">// Solución
+package main
+import &quot;fmt&quot;
+
+type Rectangle struct {
+	Length float64
+	Width  float64
+}
+
+func (r Rectangle) CalculateArea() float64 {
+	return r.Length * r.Width
+}
+
+func (r Rectangle) CalculatePerimeter() float64 {
+	return 2 * (r.Length + r.Width)
+}
+
+func main() {
+	rect := Rectangle{Length: 5, Width: 3}
+
+	area := rect.CalculateArea()
+	fmt.Println(&quot;El área del rectángulo es:&quot;, area)
+
+	perimeter := rect.CalculatePerimeter()
+	fmt.Println(&quot;El perímetro del rectángulo es:&quot;, perimeter)
+}</code></pre><ol type="1" id="b8644d1f-76c7-4bcb-b3ca-bfd3fa6653b6" class="numbered-list" start="2"><li>Crear una struct &quot;BankAccount&quot; con métodos para depositar, retirar y consultar el saldo.</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="83219b20-5621-43dc-841f-7cf314aa1d90" class="code"><code class="language-Go">// Solución
+package main
+import &quot;fmt&quot;
+
+type BankAccount struct {
+	Owner   string
+	Balance float64
+}
+
+func (b *BankAccount) Deposit(amount float64) {
+	b.Balance += amount
+}
+
+func (b *BankAccount) Withdraw(amount float64) {
+	if amount &lt;= b.Balance {
+		b.Balance -= amount
+	} else {
+		fmt.Println(&quot;Saldo insuficiente&quot;)
+	}
+}
+
+func (b BankAccount) CheckBalance() float64 {
+	return b.Balance
+}
+
+func main() {
+	account := BankAccount{Owner: &quot;Carlos Córdova&quot;, Balance: 1000}
+
+	account.Deposit(500)
+	fmt.Println(&quot;Saldo después del depósito:&quot;, account.CheckBalance())
+
+	account.Withdraw(200)
+	fmt.Println(&quot;Saldo después del retiro:&quot;, account.CheckBalance())
+}</code></pre></div></details><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">5. Recursos</summary><div class="indented"><ul id="a62f1790-f2b4-4d58-8968-c3185c5020ad" class="bulleted-list"><li style="list-style-type:disc">Uso de Structs: <a href="https://apuntes.de/golang/uso-de-estructuras/">https://apuntes.de/golang/uso-de-estructuras/</a></li></ul><ul id="8fa14330-7821-45fb-8659-82e8184b31dc" class="bulleted-list"><li style="list-style-type:disc">Uso de Methods: <a href="https://apuntes.de/golang/metodos/">https://apuntes.de/golang/metodos/</a></li></ul><ul id="c06763b4-d43f-494d-9654-4eff721b4d20" class="bulleted-list"><li style="list-style-type:disc">Uso de Interfaces: <a href="https://apuntes.de/golang/interfaces/">https://apuntes.de/golang/interfaces/</a></li></ul><ul id="a32e0cd9-635b-4444-a963-94008bc496d8" class="bulleted-list"><li style="list-style-type:disc">Structs, Herencia, Polimorfismo y Encapsulación: <a href="https://coffeebytes.dev/go-structs-herencia-polimorfismo-y-encapsulacion/">https://coffeebytes.dev/go-structs-herencia-polimorfismo-y-encapsulacion/</a></li></ul><ul id="22825b33-2c78-4973-a11c-7191332c98ad" class="bulleted-list"><li style="list-style-type:disc">¿Es Go un lenguaje orientado a objetos?: <a href="https://blog.friendsofgo.tech/posts/es_go_un_lenguaje_orientado_a_objetos/">https://blog.friendsofgo.tech/posts/es_go_un_lenguaje_orientado_a_objetos/</a></li></ul><ul id="1f3a3c6a-d036-43cd-8585-0569f30b2ee2" class="bulleted-list"><li style="list-style-type:disc">Herencia / Composición: <a href="https://daniel-m-spiridione.gitbook.io/designpatternsingo/parte1/poo/composicion">https://daniel-m-spiridione.gitbook.io/designpatternsingo/parte1/poo/composicion</a></li></ul><ul id="0d4dd5b4-16ea-4c35-a723-08884669fb2e" class="bulleted-list"><li style="list-style-type:disc">Programación Orientada a Objetos en GO: <a href="https://jfvilladiego3.medium.com/programaci%C3%B3n-orientada-a-objetos-con-go-en-pr%C3%A1ctica-5694f69c2b56">https://jfvilladiego3.medium.com/programación-orientada-a-objetos-con-go-en-práctica-5694f69c2b56</a></li></ul><ul id="55584d8a-3819-4fcc-8ebe-a2636417459c" class="bulleted-list"><li style="list-style-type:disc">Methods and interfaces: <a href="https://go.dev/tour/methods/1">https://go.dev/tour/methods/1</a></li></ul><ul id="fe961323-8e5d-47e5-b6ed-1190b42a2f5d" class="bulleted-list"><li style="list-style-type:disc">Structs Go Simplified: <a href="https://youtu.be/cyGjLsTlQck">https://youtu.be/cyGjLsTlQck</a></li></ul></div></details></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

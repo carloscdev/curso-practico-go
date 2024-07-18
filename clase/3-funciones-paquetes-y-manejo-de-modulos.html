@@ -1,0 +1,858 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Clase 3: Funciones, paquetes y manejo de módulos</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body style="padding: 0 1rem;"><article id="884040d9-21c6-4a5f-9782-631f025e0651" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">3️⃣</span></div><h1 class="page-title">Clase 3: Funciones, paquetes y manejo de módulos</h1><p class="page-description"></p></header><div class="page-body"><hr id="4a347b3d-0c16-4258-9602-51f852e6adc9"/><details open><summary style="font-weight:600;font-size:1.5em;line-height:1.3;margin:0">Objetivos</summary><div class="indented"><ol type="1" id="06c9ff30-c021-4ce0-b065-6b9e52b5b2f7" class="numbered-list" start="1"><li>Comprender la sintaxis y la estructura básica de las funciones en Go, así como aprender a declarar, llamar y utilizar funciones.</li></ol><ol type="1" id="07cc7287-46b8-4493-b5ba-db8b3f262715" class="numbered-list" start="2"><li>Organizar el código en paquetes en Go para crear una estructura lógica y modular.</li></ol><ol type="1" id="ce6e697d-31e6-4fb8-80cd-a1ed79b4aeee" class="numbered-list" start="3"><li>Familiarizarse con el proceso de importación y uso de paquetes externos en Go.</li></ol></div></details><hr id="81e4475c-79b8-443b-a98b-9292c6db940d"/><h2 style="margin-bottom: 1rem;" id="934a9701-9917-4b7b-80e1-d2ddd9ba46c5" class="">Contenido de la clase:</h2><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">1. Declaración y uso de funciones en Go</summary><div class="indented"><p id="58966701-7459-4791-a17f-6a24f23307f2" class="">Las funciones son bloques de código que se utilizan para realizar una tarea específica.</p><p id="bbf44990-6980-4d13-bb97-cae644313380" class="">Proporcionan modularidad y reutilización de código al dividir un programa en partes más pequeñas y manejables.</p><p id="47dbb2cd-03f9-45ff-9f72-8de0e56d294b" class="">Las funciones se declaran con <code>func</code> seguido del nombre de la función y paréntesis <code>( )</code> seguido de llaves <code>{ }</code></p><ul id="07dd5421-94d8-420a-9881-d61a4d6a562f" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid"><strong>Declaración de funciones</strong></span></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="4e418e5c-32ae-4998-9ecc-6bb840609da9" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+func sayHello() {
+	fmt.Println(&quot;Hello World !!!&quot;)
+}
+
+func main() {
+	sayHello()
+}</code></pre><ul id="bc964818-fec6-444b-a9b6-f8b4f706d4dd" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid"><strong>Función con parámetros</strong></span></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="4567fa13-a982-48c0-824c-ed91b836c650" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+func sum(parameter int) int {
+	result := parameter + 1
+	return result
+}
+
+func main() {
+	response :=	myFunction(5)
+	fmt.Println(response) // 6
+}</code></pre><ul id="1fc295bf-2d33-4604-8b49-d217d71fe845" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid"><strong>Retornar múltiples valores</strong></span></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="20adbfa6-9da7-4840-9170-ec82481bcf8c" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+func calculate(base, height float64) (float64, float64) {
+	var area = base * height
+	var perimeter = (base + height) * 2
+	return area, perimeter
+}
+
+func main() {
+	base := 10.8
+	height := 5.6
+	area, perimeter := calculate(base, height)
+	fmt.Printf(&quot;El área es: %.2f \n&quot;, area)
+	fmt.Printf(&quot;El perímetro es: %.2f&quot;, perimeter)
+}</code></pre><ul id="e70890bb-6563-4048-9d10-2a679066d3cd" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid"><strong>Identificador en blanco</strong></span></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="5ea1f502-0692-478a-ab76-65c184d8939e" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+func calculate(base, height float64) (float64, float64) {
+	var area = base * height
+	var perimeter = (base + height) * 2
+	return area, perimeter
+}
+
+func main() {
+	base := 10.8
+	height := 5.6
+	area, _ := calculate(base, height)
+	fmt.Printf(&quot;El área es: %.2f \n&quot;, area)
+}</code></pre><ul id="78c9edaf-4b89-468b-a866-b5c9b6a000fc" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid"><strong>Retornar valores con nombre</strong></span></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="a762eb35-610a-4518-8c8c-6d5e5cac9d46" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+func calculate(base, height float64) (area, perimeter float64) {
+	area = base * height
+	perimeter = (base + height) * 2
+	return // return implicito
+}
+
+func main() {
+	base := 10.8
+	height := 5.6
+	area, perimeter := calculate(base, height)
+	fmt.Printf(&quot;El área es: %.2f \n&quot;, area)
+	fmt.Printf(&quot;El perímetro es: %.2f&quot;, perimeter)
+}</code></pre><ul id="bb97c60b-6e1a-4104-8dbc-9f063f1d6edd" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid"><strong>Función Variádica [N número de argumentos]</strong></span></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="288e89b2-7b3d-44ea-9ffd-bb3747e2ed60" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+// Función variádica que suma un número variable de enteros [elipsis operator]
+func sumar(nums ...int) int {
+	resultado := 0
+	for _, num := range nums {
+		resultado += num
+	}
+	return resultado
+}
+
+func main() {
+	// Llamada a la función variádica con diferentes números de argumentos
+	fmt.Println(&quot;Suma:&quot;, sumar(1, 2, 3)) // Suma: 6
+
+	// También puedes pasar un slice como argumento variádico
+	numeros := []int{1, 2, 3, 4, 5}
+	// Utilizamos el operador de elipses `...`
+	fmt.Println(&quot;Suma:&quot;, sumar(numeros...)) // Suma: 15
+}</code></pre></div></details><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">2. Organización de código en paquetes y manejo de módulos.</summary><div class="indented"><p id="750a9a73-f6ff-481b-ac2b-260116f599d8" class="">Hasta ahora solo hemos visto programas de Go que tienen un solo archivo con una función main y un par de funciones más. En un entorno real, este enfoque de escribir todo el código fuente en un solo archivo no es escalable. Se vuelve imposible reutilizar y mantener el código escrito de esta manera. Aquí es donde los paquetes son útiles.</p><p id="5ceb087c-3f41-41a4-91b3-42c586e0cfa2" class="">Los paquetes se utilizan para organizar el código, así conseguir una mejor reutilización y legibilidad. Los paquetes son una colección de archivos de origen de Go que residen en el mismo directorio.</p><p id="08b7804e-64d3-41c7-b593-93438372cc78" class="">Para utilizar un paquete es necesario importar dicho paquete utilizando la palabra clave <code><strong>import</strong></code>.</p><div id="9ed1ce8c-b184-4826-99e4-42b2422a4fec" class="column-list"><div id="12d18821-fa39-4c1e-9afb-7da30b0d255c" style="width:56.25%" class="column"><p id="cfec931d-f226-4431-abcc-a5879437c71a" class="">En go <strong>puedes considerar un paquete como todos los archivos que contenga un directorio y un modulo como una colección de paquetes</strong>. Para usar el código de un paquete necesitamos importarlo, sin embargo, en Go no existen las importaciones de módulos relativas. Antes de Go <code>1.8</code>, para importar paquetes (no había modulos) era necesario usar la ruta absoluta, considerando como base la ruta a la que apuntaba la variable de entorno $<em>GOPATH</em> o. A partir de Go <code>1.11</code>, la manera más sencilla de trabajar con paquetes es usar go mod.</p></div><div id="d9ae2110-356b-40dc-bf3e-3d204879e856" style="width:43.75%" class="column"><figure id="44918129-eaed-437a-ab27-c1793e419205" class="image" style="text-align:left"><a href="./assets/clase-3/paquetes.png"><img style="width:288px" src="./assets/clase-3/paquetes.png"/></a></figure></div></div><p id="40e23172-45b0-4631-b732-a32af269aff2" class=""><span style="border-bottom:0.05em solid"><strong>¿Para que sirve un archivo go.mod?</strong></span></p><p id="be16c894-d9ab-4d8f-b7ff-7066e74ef266" class="">Un archivo de go.mod define un módulo y nos permite establecer el directorio que usaremos como base para importar los paquetes.</p><p id="b5dfff97-ddb3-4104-81ea-7ebebd934851" class=""><span style="border-bottom:0.05em solid"><strong>¿Qué contiene un archivo go.mod?</strong></span></p><p id="26fb4fbd-13f0-45e7-a6f2-3ae315436010" class="">El archivo básico de <code>go.mod</code> es muy corto, dentro de este solo se especifíca el nombre del módulo, el cual usaremos para realizar las importanciones y la versión de go.</p><p id="32051db9-a30e-40f3-a626-efbba716e1e8" class=""><span style="border-bottom:0.05em solid"><strong>Crear un archivo go.mod</strong></span></p><ol type="1" id="7d37f0c6-afcd-45a1-859d-5b90ef1ff84a" class="numbered-list" start="1"><li><strong>Variables de entorno en GO</strong></li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="52a9305d-07be-4d5a-aa1d-ed6cf453d884" class="code"><code class="language-Bash">$ go env</code></pre><ol type="1" id="47c2ccc4-f4ad-432f-b5cc-b07a18d88eff" class="numbered-list" start="2"><li><strong>Activar GO111MODULE</strong></li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="93269c33-b9ba-4091-b98f-5b8e8ff02ab8" class="code"><code class="language-Bash">$ go env -w GO111MODULE=on</code></pre><ol type="1" id="6d38bcda-43ea-46ca-8ce1-f729a56c2f65" class="numbered-list" start="3"><li><strong>Empezar a usar Go Mod en nuestro proyecto</strong></li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="928cb3c5-272c-4214-a3a2-721a96249336" class="code"><code class="language-Bash">$ go mod init &lt;modulename&gt;</code></pre><ol type="1" id="bc79633c-fb2f-43d1-9f88-3cb09d5045f6" class="numbered-list" start="4"><li>Importar desde nuestro archivo main.go</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="a2f1849b-a0a9-4aa7-8c9b-58393199a690" class="code"><code class="language-Go">package main
+
+import (
+	&quot;mimodulo/paquete1&quot;
+	&quot;mimodulo/paquete2&quot;
+)</code></pre><p id="d967bcac-33d2-4ea1-8b7b-eef3a2d76675" class=""><span style="border-bottom:0.05em solid"><strong>Ejercicio</strong></span></p><ol type="1" id="82a3bba6-a4e7-40e6-970a-39f846a09d8f" class="numbered-list" start="1"><li>Estructura del proyecto</li></ol><figure id="453561fa-a9cb-4842-b75c-be2b37d63a68" class="image"><a href="./assets/clase-3/estructura.png"><img style="width:441px" src="./assets/clase-3/estructura.png"/></a></figure><ol type="1" id="40764f0e-1d72-4225-b8c3-8fa9f7fd20b1" class="numbered-list" start="2"><li>Archivo go.mod</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="cbd55af9-3017-488b-bbbe-55df11e9379f" class="code"><code class="language-Go">module go-curso-practico
+
+go 1.20</code></pre><ol type="1" id="79bbf9fe-d00f-4250-a4c3-72276113c5ab" class="numbered-list" start="3"><li>Archivo main.go</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="10ddf39e-f7ab-42c1-bbf4-2511f2a76252" class="code"><code class="language-Go">package main
+
+import (
+	&quot;fmt&quot;
+	&quot;go-curso-practico/area&quot;
+)
+
+func main() {
+	// Datos del rectángulo
+	length := 5.0
+	width := 3.0
+	// Cálculo del área del rectángulo
+	rectArea := area.CalculateRectangleArea(length, width)
+	fmt.Printf(&quot;El área del rectángulo es: %.2f\n&quot;, rectArea)
+
+	// Datos del cuadrado
+	side := 4.0
+	// Cálculo del área del cuadrado
+	squareArea := area.CalculateSquareArea(side)
+	fmt.Printf(&quot;El área del cuadrado es: %.2f\n&quot;, squareArea)
+}</code></pre><ol type="1" id="71827e01-d911-49e2-aa01-04c6f1dfd062" class="numbered-list" start="4"><li>Archivo area/rectangleArea.go</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="d57b92e5-1e73-4a20-b421-878a84eeb813" class="code"><code class="language-Go">package area
+
+// Función para calcular el área de un rectángulo
+func CalculateRectangleArea(length float64, width float64) float64 {
+	return length * width
+}</code></pre><ol type="1" id="6ae01d46-3bc3-4a66-8e3d-c25e91f077ca" class="numbered-list" start="5"><li>Archivo area/squareArea.go</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="fd4c418e-8cab-48e2-a74a-1e10f5de94c2" class="code"><code class="language-Go">package area
+
+import &quot;math&quot;
+
+// Función para calcular el área de un cuadrado
+func CalculateSquareArea(side float64) float64 {
+	return math.Pow(side, 2)
+}</code></pre><p id="690f0435-646f-4be5-bba8-256c5f5b68d3" class=""><span style="border-bottom:0.05em solid"><strong>Tips</strong></span></p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="6fa2f785-3119-476f-8c5a-cb7958da29df"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">Importar paquetes sin usarlos<p id="9927c60b-c2e1-46af-b08b-c3ecef9ec78b" class="">Hay ocasiones en donde querremos importar paquetes y no usarlos. Para esto basta con agregar un guión bajo antes de la importación.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="873b5eb9-9d1a-4e62-8cd8-552551b1c057" class="code"><code class="language-Go" style="white-space:pre-wrap;word-break:break-all">package main
+
+import (
+  _ &quot;fmt&quot;
+)</code></pre></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="f78587be-05d3-448b-a004-1606e5e7ec66"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">Alias al importar paquetes<p id="071291a2-122c-460f-b7bb-6859fcd95a15" class="">Go también nos permite declarar un alias a la hora de importar un paquete anteponiendo el alias a la ruta de importación.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="f92dda45-ac26-419d-a2ab-2f21cd9030a0" class="code"><code class="language-Go" style="white-space:pre-wrap;word-break:break-all">package main
+
+import alias &quot;ruta/a/paquete&quot;
+
+var result = alias.MyFunction()</code></pre></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="3321e9fb-7407-4884-a825-30ebfa0abae0"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">Importaciones con punto<br/>Go permite acceder al contenido del paquete de manera directa si importamos usando como alias un punto. De esta manera podemos ignorar el nombre del paquete y acceder directamente a los objetos que contiene<br/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="45a57fc2-99bc-41b3-86bb-8b7a511ea8a5" class="code"><code class="language-Go" style="white-space:pre-wrap;word-break:break-all">package main
+
+import . &quot;ruta/a/paquete&quot;
+
+var result = MyFunction()</code></pre></div></figure></div></details><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">3. Importación y uso de paquetes externos.</summary><div class="indented"><p id="9091affa-e4f7-41a9-977f-52895aa82cbe" class=""><span style="border-bottom:0.05em solid"><strong>go get</strong></span></p><p id="77c3693c-3d41-47aa-95c5-c7dd549e3196" class="">Go tiene un manejador de modulos equivalente a pip y npm, python y javascript, respectivamente, llamado get.</p><p id="890103ab-b2e8-48eb-b535-3ec6ca4c9e82" class="">Para obtener modulos remotos ejecutamos el comando <code>go get</code> en consola seguido de la ruta de nuestro paquete; soporta cualquier repositorio, no solo github. Desde la versión de go <code>1.18</code>, <code>go get</code> no compila el código que descarga, sino que se limita a agregar, actualizar o remover dependencias en el archivo <code>go.mod</code>.<div class="indented"><ul id="f9359d46-6c05-4448-b730-30598a2c86f0" class="bulleted-list"><li style="list-style-type:disc">Librerías de prueba<ul id="0576408f-d93a-4e01-9604-50cbdcc6f2a1" class="bulleted-list"><li style="list-style-type:circle"><a href="https://github.com/google/uuid">https://github.com/google/uuid</a></li></ul><ul id="4a160677-624d-4395-9a25-c97e57940d4b" class="bulleted-list"><li style="list-style-type:circle"><a href="https://github.com/Pallinder/go-randomdata">https://github.com/Pallinder/go-randomdata</a></li></ul></li></ul></div></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="ed7ca920-477b-4728-92cb-2b23f4b78d3d" class="code"><code class="language-Bash">$ go get github.com/google/uuid</code></pre><ol type="1" id="fe47264d-c003-4659-bce8-ffca60ee673b" class="numbered-list" start="1"><li>Archivo go.sum</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="3366e2e6-8841-45f9-ac48-1ba78c35c58a" class="code"><code class="language-Go">github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
+github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=</code></pre><ol type="1" id="4c0d7674-c1a2-4cf2-b93f-5586fd43f256" class="numbered-list" start="2"><li>Archivo main.go</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="be28b970-2204-4969-bce3-a32aa348fa31" class="code"><code class="language-Go">package main
+import &quot;github.com/google/uuid&quot;
+
+func main() {
+	uuid := uuid.New()
+	fmt.Println(uuid)
+}</code></pre><p id="33babfb1-3797-4054-8096-58c3d50e8145" class=""><span style="border-bottom:0.05em solid"><strong>go install</strong></span></p><p id="ad9c4e9e-e736-415a-8765-6f536d29de8b" class="">Por otro lado, <code>go install</code> <strong>no descarga código</strong>, sino que compila un modulo e instala el binario en $GOPATH/bin, ignorando el contenido del archivo <em>go.mod</em> cuando se le especifica una versión a través de la linea de comandos.</p><p id="90d5ea2d-9a95-4470-8471-646c40dd5c9e" class="">Go install generalmente se usará para instalar comandos</p><p id="6e4e7c73-b2a2-4d61-a22a-e39da1a2fd22" class="">En resumen, <code>go get</code> se utiliza para descargar y gestionar dependencias de un proyecto, mientras que <code>go install</code>se utiliza para compilar, generar y almacenar programas principales o ejecutables en el GOPATH o en el módulo Go actual. Ambos comandos son útiles para gestionar proyectos y dependencias en Go.</p><hr id="f79856cd-5bea-4c0e-93b6-098cc3797a99"/><p id="af61234b-5ce9-4506-918d-a850c038c58d" class=""><span style="border-bottom:0.05em solid"><strong>Recursos GO</strong></span></p><ol type="1" id="021ced1f-59bc-4fc6-af4e-05f21719042d" class="numbered-list" start="1"><li>Go Awesome: <code>Go Awesome</code> es un repositorio de GitHub que contiene una lista curada de bibliotecas y recursos populares en el ecosistema de Go. Proporciona una estructura organizada de categorías, lo que facilita la navegación y la búsqueda de bibliotecas específicas. Las listas de Go Awesome son mantenidas por la comunidad y se pueden contribuir a través de solicitudes de extracción en GitHub. Sin embargo, no proporciona información detallada sobre cada biblioteca y generalmente redirige a otros sitios, como repositorios de GitHub o sitios web oficiales, para obtener más detalles y documentación.</li></ol><ol type="1" id="a4fd1e74-f3b4-41ae-ad27-c512879188e0" class="numbered-list" start="2"><li>pkg.go.dev: <code>pkg.go.dev</code> es un sitio web oficial de Go mantenido por el equipo de Go de Google. Proporciona una interfaz de búsqueda y exploración de bibliotecas y paquetes en el ecosistema de Go. A diferencia de Go Awesome, <code>pkg.go.dev</code> muestra información más detallada para cada biblioteca, incluyendo documentación, ejemplos de uso, estadísticas de descargas y versiones, entre otros detalles. También cuenta con una interfaz de búsqueda más avanzada y permite filtrar y ordenar resultados en función de diferentes criterios.</li></ol></div></details><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">4. Tarea</summary><div class="indented"><ol type="1" id="ea81175c-8c3b-4add-87f0-70919809b3b9" class="numbered-list" start="1"><li>Escribe un programa en Go que calcule el área de un círculo. El programa debe solicitar al usuario que ingrese el radio del círculo y luego mostrar el área calculada en la salida.</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="081e0446-bb5e-4b90-baa8-84347a08b2da" class="code"><code class="language-Go">// Solución
+package main
+import (
+	&quot;fmt&quot;
+	&quot;math&quot;
+)
+
+func calculateCircleArea(radius float64) float64 {
+	return math.Pi * math.Pow(radius, 2)
+}
+
+func main() {
+	var radius float64
+	fmt.Print(&quot;Ingrese el radio del círculo: &quot;)
+	fmt.Scanln(&amp;radius)
+
+	area := calculateCircleArea(radius)
+
+	fmt.Printf(&quot;El área del círculo con radio %.2f es: %.2f\n&quot;, radius, area)
+}</code></pre><ol type="1" id="399fd59e-b276-4a8e-ab89-29c268b49f2f" class="numbered-list" start="2"><li>Implementa una función en Go que calcule el factorial de un número dado. Luego llama a esa función desde la función main y muestra el resultado en pantalla.</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="02882ec9-8fd1-434e-b8b8-ab94f9e60c7c" class="code"><code class="language-Go">// Solución
+package main
+import &quot;fmt&quot;
+
+// Función para calcular el factorial de un número
+func factorial(n int) int {
+	if n == 0 {
+		return 1
+	}
+	return n * factorial(n-1)
+}
+
+func main() {
+	var num int
+
+	fmt.Print(&quot;Ingresa un número: &quot;)
+	fmt.Scanln(&amp;num)
+	result := factorial(num)
+	fmt.Printf(&quot;El factorial de %d es %d\n&quot;, num, result)
+}</code></pre></div></details><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">5. Recursos</summary><div class="indented"><ul id="06add16d-b4db-4cbd-975d-51a398d8cafd" class="bulleted-list"><li style="list-style-type:disc">Funciones y paquetes: <a href="https://coffeebytes.dev/go-funciones-argumentos-y-el-paquete-fmt/">https://coffeebytes.dev/go-funciones-argumentos-y-el-paquete-fmt/</a></li></ul><ul id="4a5d4071-0057-426b-a259-819906df3cbe" class="bulleted-list"><li style="list-style-type:disc">Uso de funciones: <a href="https://apuntes.de/golang/uso-de-funciones/">https://apuntes.de/golang/uso-de-funciones/</a></li></ul><ul id="f3bf2220-1989-4ea1-bdc3-86487f74d1fb" class="bulleted-list"><li style="list-style-type:disc">Funciones que regresan múltiples valores: <a href="https://apuntes.de/golang/funciones-que-regresan-multiples-valores/">https://apuntes.de/golang/funciones-que-regresan-multiples-valores/</a></li></ul><ul id="02ad4187-150b-4d13-92b3-481da76ae859" class="bulleted-list"><li style="list-style-type:disc">Funciones Variádicas: <a href="https://apuntes.de/golang/funciones-variadicas/">https://apuntes.de/golang/funciones-variadicas/</a></li></ul><ul id="72c3777d-1293-4af3-89ab-76accf144ed4" class="bulleted-list"><li style="list-style-type:disc">Uso de paquetes de terceros: <a href="https://apuntes.de/golang/uso-de-paquetes-de-terceros/">https://apuntes.de/golang/uso-de-paquetes-de-terceros/</a></li></ul><ul id="777d8131-3bfa-44b7-aa1f-4b16d3f9d633" class="bulleted-list"><li style="list-style-type:disc">Creación y uso de paquetes: <a href="https://apuntes.de/golang/paquetes/">https://apuntes.de/golang/paquetes/</a></li></ul></div></details><p id="f843decf-56e6-4687-a88b-d949e4c91020" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
