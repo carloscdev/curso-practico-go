@@ -1,0 +1,943 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Clase 2: Control de flujo y estructuras de datos</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="d787b8fb-d182-416a-a1d1-21dc2ec19c35" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">2️⃣</span></div><h1 class="page-title">Clase 2: Control de flujo y estructuras de datos</h1><p class="page-description"></p></header><div class="page-body"><hr id="7f39caab-5788-4570-85b6-e59e61e30afd"/><details open><summary style="font-weight:600;font-size:1.5em;line-height:1.3;margin:0">Objetivos</summary><div class="indented"><ol type="1" id="e38f36bb-6966-4f57-a33b-761fa46ae6e1" class="numbered-list" start="1"><li>Aprender a crear y manipular arrays y slices en Go, realizando operaciones como inserción, eliminación y actualización de elementos.</li></ol><ol type="1" id="94387899-bcb0-4de5-88d0-110aa11864d7" class="numbered-list" start="2"><li>Comprender y aplicar las operaciones básicas en maps, como la obtención de un valor dado su clave y la verificación de la existencia de una clave en el map.</li></ol><ol type="1" id="89dba429-2c6f-400f-83bc-37a82d16cd1b" class="numbered-list" start="3"><li>Comprender los conceptos fundamentales del control de flujo en Go, incluyendo las instrucciones condicionales (if-else, switch), los bucles (for) y las instrucciones de salto (break, continue).</li></ol></div></details><hr id="4c5ee1e7-22a3-4fbe-b0eb-8844c03786fd"/><h2 id="4270cf34-8ef0-455d-a659-bb9fdc6fb0ba" class="">Contenido de la clase:</h2><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">1. Arrays y slices: creación, manipulación y operaciones básicas.</summary><div class="indented"><p id="b0a1dde0-4aa8-48b7-8022-408f3772dde8" class="">Los arrays y los slices son estructuras de datos fundamentales en la programación.</p><ul id="b55bd3dc-4410-41c8-b26f-dd6bd2f54365" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid"><strong>Arrays:</strong></span><ul id="79e82e16-3279-4ab3-95cd-67c23a3e945f" class="bulleted-list"><li style="list-style-type:circle">Son una secuencia contigua de elementos del mismo tipo con tamaño fijo.</li></ul><ul id="966e2c67-8731-4eca-9e64-d0788c9dc356" class="bulleted-list"><li style="list-style-type:circle">Se definen utilizando una longitud específica durante la declaración.</li></ul><ul id="5c0e4314-3fd5-4a2e-aa3d-8a10c729f36d" class="bulleted-list"><li style="list-style-type:circle">Los arrays tienen un tamaño estático que no puede modificarse una vez creado.</li></ul><ul id="18bfd406-eabf-4efd-bd97-135ff2132b47" class="bulleted-list"><li style="list-style-type:circle">La copia de un array implica copiar todos sus elementos.</li></ul><ul id="0be3e00b-2f6a-4d8d-b55c-3a19a1ef56ed" class="bulleted-list"><li style="list-style-type:circle">La asignación entre arrays implica copiar todos sus elementos.</li></ul><ul id="e6248bbf-8024-4f77-a95a-705083b470c2" class="bulleted-list"><li style="list-style-type:circle">El acceso a los elementos se realiza mediante índices.</li></ul><ul id="30752301-f873-4b95-a894-62058d2a641f" class="bulleted-list"><li style="list-style-type:circle">La longitud de un array se obtiene utilizando la función <code>len()</code>.</li></ul></li></ul><p id="f28415fa-bfb9-4d93-9904-8db37a587be4" class=""> </p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="3803612f-8f52-40ed-b8ec-8d3a5d61a420" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+func main() {
+	// Declarando array - Se inicializa con 0 todos los elementos por defecto
+	var numbers [3]int
+	// Reasignando valores
+	numbers[0] = 1
+	numbers[1] = 2
+	numbers[2] = 3 
+	fmt.Println(numbers) // [1 2 3]
+
+	var students [3]string = [3]string{&quot;Carlos&quot;, &quot;Juan&quot;, &quot;Jose&quot;}
+	fmt.Println(students) // [Carlos Juan José]
+	
+	// Asignación corta y usando indices
+	cart := [3]string{&quot;Eggs&quot;, 2: &quot;Milk&quot;}
+	fmt.Println(cart) // [Eggs &quot;String Vacio&quot; Milk]
+
+	// Sin una longitud establecida
+	courses := [...]string{&quot;Go&quot;, &quot;Nest&quot;}
+	fmt.Println(&quot;Length: &quot;, len(courses)) // 2
+	fmt.Printf(&quot;%T \n&quot;, courses) // [2]string
+	newCourses := courses // Diferentes espacios de memoria
+	newCourses[0] = &quot;JS&quot;
+	fmt.Println(courses, newCourses) // [Go Nest] [JS Nest]
+}</code></pre><p id="1013be84-71c6-4d62-954c-97387cf7bcf3" class="">El tamaño del array es una parte del tipo. Por eso <code>[5]int</code> y <code>[25]int</code> son tipos distintos. No te preocupes por esta restricción ya que existen los slices que no tienen esa restricción.</p><ul id="78b82db4-df93-4381-a1db-7f2376489c58" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid"><strong>Slices:</strong></span><ul id="572273b7-7216-4fc2-85cd-df1e90d0c346" class="bulleted-list"><li style="list-style-type:circle">Son una vista flexible y dinámica de una sección de un array.</li></ul><ul id="6bf15682-9049-4f9b-ac7b-cdd0c1b06c61" class="bulleted-list"><li style="list-style-type:circle">Se crean a partir de un array existente o utilizando la función <code>make()</code>.</li></ul><ul id="c2637ac0-730c-4350-9229-78a3b70f5dac" class="bulleted-list"><li style="list-style-type:circle">Los slices no tienen un tamaño fijo y pueden crecer o reducirse dinámicamente.</li></ul><ul id="2389471d-9902-4fe8-b6e7-b4e9134a78fc" class="bulleted-list"><li style="list-style-type:circle">Comparten memoria con el array subyacente, por lo que las modificaciones en un slice afectan al array original y viceversa.</li></ul><ul id="eef1494c-d3b5-468e-a051-7ab71b8550ac" class="bulleted-list"><li style="list-style-type:circle">La copia de un slice solo copia la referencia al array subyacente, no los elementos en sí.</li></ul><ul id="cf0c3ee9-0a8d-41f2-9010-82714907ea46" class="bulleted-list"><li style="list-style-type:circle">La asignación entre slices simplemente copia la referencia al array subyacente.</li></ul><ul id="970f8803-f1d8-4860-b97a-ae9ea52c3b87" class="bulleted-list"><li style="list-style-type:circle">El acceso a los elementos se realiza mediante índices.</li></ul><ul id="c326f54a-df05-4992-b1e8-a4a6a5786279" class="bulleted-list"><li style="list-style-type:circle">La longitud de un slice se obtiene utilizando la función <code>len()</code>, y la capacidad se obtiene utilizando la función <code>cap()</code>.</li></ul><ul id="c524dc64-138f-43f2-9e03-1b117ab8bbf2" class="bulleted-list"><li style="list-style-type:circle">Los slices admiten operaciones adicionales, como agregar elementos con <code>append()</code>, recortar un slice con <code>slicing</code> y copiar slices con <code>copy()</code>.</li></ul><ul id="79eb706c-716e-4d06-a90c-82551315d356" class="bulleted-list"><li style="list-style-type:circle">Para eliminar un índice particular, se debe formar un slice a partir de otros slices.</li></ul></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="a03570bf-aad2-4e98-b11f-aad81d17e404" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+func main() {
+	// Declaración de un slice
+	var mySlice []int
+	fmt.Println(mySlice)
+
+	// Crear un slice
+	// Slice a partir de un array
+	var names = [3]string{&quot;Julio&quot;, &quot;Claudio&quot;, &quot;Oscar&quot;}
+	newNames := names[:]
+	newNames[0] = &quot;Osman&quot; // Modifica al Array original y se modifica el Slice actual
+	fmt.Println(names, newNames, len(names), cap(names))
+
+	// Slice utilizando la función make(tipo_dato, len, cap(optional))
+	courses := make([]int, 3, 5)
+	fmt.Println(courses, len(courses), cap(courses))
+
+	// Añadir un elemento a un slice
+	// La función append es una función variádica, es decir que se le pueden enviar N argumentos al mismo tiempo.
+	var list []int = []int{1, 2, 3, 4, 5}
+	fmt.Println(list) // [1, 2, 3, 4, 5]
+	// list = append(list, 6, 7, 8, 9)
+	list2 := []int{6, 7, 8, 9}
+	// Agregando elementos de un Slice a otro con el operador elipsis
+	list = append(list, list2...) // [6, 7, 8, 9]
+	fmt.Println(list)
+
+	// Crear un slice de dos dimensiones
+	slice2D := [][]int{
+		{1, 2, 3},
+		{4, 5, 6},
+		{7, 8, 9},
+	}
+	// Agregar nuevo elemento
+	newSlice := []int{10, 11}
+	slice2D = append(slice2D, newSlice)
+	// Acceder a los elementos del slice de dos dimensiones
+	fmt.Println(slice2D[0][0]) // 1
+	fmt.Println(slice2D[1][1]) // 5
+	fmt.Println(slice2D[2][2]) // 9
+	// Modificar un elemento del slice de dos dimensiones
+	slice2D[1][2] = 99
+	fmt.Println(slice2D)
+}</code></pre><p id="19acbcdc-b140-49d5-ae63-4aac20af82ae" class="">En resumen, los arrays son estructuras estáticas con tamaño fijo, mientras que los slices proporcionan una vista más flexible y dinámica de una sección de un array. Los slices son más utilizados en Go debido a su capacidad de crecimiento y su facilidad para manipular y operar con ellos.</p></div></details><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">2. Maps: uso y manipulación de datos clave-valor.</summary><div class="indented"><p id="75be011d-9abc-4518-ad81-db76711254e3" class="">El tipo de dato <code>map</code> se utiliza para trabajar con datos clave-valor. Un <code>map</code> es una estructura de datos que almacena pares de valores, donde cada valor está asociado a una clave única. Esto permite acceder rápidamente a los valores utilizando las claves correspondientes.</p><ul id="fe1b3a8d-1c65-4931-88de-f04a183734b0" class="bulleted-list"><li style="list-style-type:disc">Características<ul id="bc251d05-a16d-42d4-998c-41a95962c4b4" class="bulleted-list"><li style="list-style-type:circle">Los maps no se pueden copiar directamente, se tiene que hacer mediante un bucle (for)</li></ul><ul id="f4e72105-3f36-4bfe-bc5b-be2d32a99d37" class="bulleted-list"><li style="list-style-type:circle">Las claves en un map deben ser únicas. Esto significa que no puedes tener dos claves idénticas en un map. Si intentas agregar una clave existente, el valor anterior asociado con esa clave se reemplazará con el nuevo valor.</li></ul><ul id="1385d530-6c90-40df-81c5-5a4349a4a7a9" class="bulleted-list"><li style="list-style-type:circle">Se accede a cada elemento mediante su clave (key)</li></ul><ul id="f81c894f-ce10-4118-bd25-636e7a98281f" class="bulleted-list"><li style="list-style-type:circle">Puedes obtener la longitud de un map utilizando la función <code>len(map)</code>.</li></ul><ul id="9d0b6cf6-bd61-4b00-956e-a0574bf6a49f" class="bulleted-list"><li style="list-style-type:circle">Puedes utilizar un loop <code>for</code> y la sintaxis <code>range</code> para iterar sobre los elementos de un map.</li></ul><ul id="bc886f1a-4de7-4f1e-bb6c-79372aae6cf3" class="bulleted-list"><li style="list-style-type:circle">Puedes eliminar elementos de un map utilizando la función <code>delete(map, clave)</code>.</li></ul></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="dedb4077-7a94-4a8f-8e10-2941d328d1d4" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+func main() {
+	// Crear un map vacío
+	students := make(map[string]int)
+
+	// Agregar elementos al map
+	students[&quot;Juan&quot;] = 18
+	students[&quot;Pedro&quot;] = 25
+	students[&quot;Maria&quot;] = 40
+	fmt.Println(students)
+
+	// Acceder a un valor utilizando una clave
+	ageJuan := students[&quot;Juan&quot;]
+	fmt.Println(&quot;La edad de Juan es:&quot;, ageJuan)
+
+	// Modificar un valor existente
+	students[&quot;Pedro&quot;] = 55
+	fmt.Println(students)
+
+	// Eliminar elemento del map
+	delete(students, &quot;Maria&quot;)
+	fmt.Println(students)
+
+	// Verificar si una clave existe en el map
+	ageJose, exists:= students[&quot;Jose&quot;]
+	if exists {
+		fmt.Println(&quot;La edad de Jose es:&quot;, ageJose)
+	} else {
+		fmt.Println(&quot;Jose no está en el map&quot;)
+	}
+	
+	// Iterar sobre los elementos del map
+  for name, age := range students {
+      fmt.Println(name, &quot;tiene&quot;, age , &quot;años&quot;)
+  }
+}</code></pre><p id="fd03ca6b-1dc8-421b-b4a1-53e677c0bcfc" class="">Recuerda que los maps en Go no mantienen un orden específico de los elementos, por lo que el orden en el que se iteran los elementos puede variar en cada ejecución. </p><p id="e9e4322f-dace-40bc-885e-0678c11f1b6d" class="">Los maps en Go son una herramienta poderosa para trabajar con datos clave-valor, y ofrecen un rendimiento eficiente en la búsqueda y manipulación de datos.</p></div></details><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">3. Estructuras de control: condicionales y bucles.</summary><div class="indented"><ul id="630b674a-f52d-4b57-be9d-d7bb051254f6" class="bulleted-list"><li style="list-style-type:disc"><strong>¿Qué son las estructuras de control?</strong><ul id="7c6193b6-57c4-4b41-bf92-570753e44d1a" class="bulleted-list"><li style="list-style-type:circle">Las estructuras de control permiten controlar el flujo de la ejecución del código. Para poder construir programas es necesario el uso de estas de forma que representan la lógica de “que hacer en caso de” y “a donde ir”</li></ul></li></ul><ul id="e7733073-20ea-42ec-a660-e108187fe54e" class="bulleted-list"><li style="list-style-type:disc"><strong>¿Qué tipos de estructuras de control existen en Go?</strong><ul id="06d74720-45ed-4052-b586-b7bc61277ec2" class="bulleted-list"><li style="list-style-type:circle"><strong>Condicionales</strong><ul id="a641ec9e-6726-4c3d-91f8-a84b8abf8ee8" class="bulleted-list"><li style="list-style-type:square"><strong>If:</strong> Permite ejecutar un bloque de código si una condición es <code>true</code>.</li></ul><ul id="666c5b80-6930-4596-9ac1-bab012707374" class="bulleted-list"><li style="list-style-type:square"><strong>Else:</strong> Se utiliza junto con <code>if</code> para ejecutar un bloque de código como alternativa si la condición en el <code>if</code> es <code>false</code>.</li></ul><ul id="8f6cc13a-41a9-4e87-a7aa-9f606f11691f" class="bulleted-list"><li style="list-style-type:square"><strong>Else If: </strong>Premite evaluar multiples condiciones en cadena y ejecutar el bloque de código correspondiente a la primera condición que sea verdadera.</li></ul><ul id="1b3311d1-5b1d-4a51-8e28-536245e627d3" class="bulleted-list"><li style="list-style-type:square"><strong>Switch:</strong> Permite seleccionar un caso específico de varios posibles, basándose en el valor de una expresión.</li></ul><p id="d4622f11-01ea-4bbf-8aeb-6dc53a0e36e4" class=""><span style="border-bottom:0.05em solid"><strong>If / Else / Else If</strong></span></p><p id="288da763-0bd7-4876-a60c-0da14eb12a80" class="">La sentencia <code>if</code> es la más sencilla de utilizar y se encuentra en casi todos los lenguajes de programación. Representa el paradigma de lo que sucede si una condición se cumple y en combinación con la sentencia <code>else</code> puede especificar un camino alternativo.</p><p id="e1ffa52d-f08c-4a4e-bb93-5e39f2562245" class="">La sentencia <code>else</code> que se puede traducir como “si no…” o “de lo contrario…”, permite definir un bloque de código en caso de que la condición <code>if</code> no se cumpla.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="5a1ce95d-b7c1-40f6-b5ed-332453a4bba7" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+func main() {
+	// Definimos una variable age tipo entero
+	var age int
+	fmt.Println(&quot;Cual es tu edad: &quot;)
+
+	// Capturamos age en el puntero &amp;age
+	// fmt.Scanln toma la dirección de memoria de la variable donde se almacenará el valor ingresado por el usuario
+	fmt.Scanln(&amp;age)
+
+	// Evaluamos si age es mayor o igual a 18
+	if age &gt;= 18 {
+		fmt.Println(&quot;Eres mayor de edad&quot;)	
+	} else {
+		fmt.Println(&quot;Eres menor de edad&quot;)	
+	}
+}</code></pre><p id="20bffbc9-13af-44b3-a03c-b8b16fec95d6" class="">Existe casos en los cuales lo que se requiere es poder evaluar múltiples condiciones, no solo dos.</p><ul id="18bcee52-fa06-4772-ae01-53646abddc9b" class="bulleted-list"><li style="list-style-type:square">Anidar un if dentro de otro</li></ul><ul id="680de2dc-dc58-4756-b55b-05ae76e2517f" class="bulleted-list"><li style="list-style-type:square">Utilizar <code>else if</code> para cubrir cada una de las condiciones </li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="76c4844e-f8e8-46f0-a64c-c6cee972fa25" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+func main() {
+	var movie string
+	fmt.Println(&quot;Escribe una categoria: terror | comedia | drama&quot;)
+	fmt.Scanln(&amp;movie)
+	if movie == &quot;terror&quot; {
+		fmt.Println(&quot;Lista de peliculas de terror&quot;)
+	} else if movie == &quot;comedia&quot; {
+		fmt.Println(&quot;Lista de peliculas de comedia&quot;)
+	} else if movie == &quot;drama&quot; {
+		fmt.Println(&quot;Lista de peliculas de comedia&quot;)
+	} else {
+		fmt.Println(&quot;No existe esa categoría&quot;)
+	}
+}</code></pre><p id="c0f270ac-e934-4d1e-ad5d-da349a8c9046" class=""><span style="border-bottom:0.05em solid"><strong>Switch</strong></span></p><p id="71905e52-3f9d-4c60-8bad-c9bef67dde9f" class="">La sentencia switch es equivalente al uso de múltiples <code>else if</code>, pero de una forma más ordenada.</p><p id="576b72a4-8c08-4081-b6cb-ce09b444e6b9" class="">A diferencia de otros lenguajes de programación en los cuales el condicional <code>switch</code> requiere de la palabra reservada <code>break</code>, en Go no es necesario usarla.</p><ul id="9801ba98-7f42-4823-ae6d-ebda92d7c2a6" class="bulleted-list"><li style="list-style-type:square">Formas de utilizar switch<ol type="1" id="e73a1d52-9007-42cc-9ede-0d7151f36472" class="numbered-list" start="1"><li><code>switch</code> con expresión</li></ol><ol type="1" id="bf3faab8-9b20-4247-8504-b60ba5913f38" class="numbered-list" start="2"><li><code>switch</code> sin expresión</li></ol><ol type="1" id="caaf0d80-78cb-4d4f-8b24-82ecb6c2cf3d" class="numbered-list" start="3"><li><code>switch</code> con múltiples valores en un caso</li></ol><ol type="1" id="04294d66-337e-4d34-8126-a446cef48094" class="numbered-list" start="4"><li><code>switch</code> con tipo de dato.</li></ol><ol type="1" id="57f8ac23-7c0e-4bd4-b226-82742500cacc" class="numbered-list" start="5"><li><code>switch</code> con fallthrough (<strong>fallthrough</strong> es usada para <strong>transferir el control</strong> a la primera declaración del <strong>case</strong> que está presente inmediatamente después del <strong>case</strong> que se ha ejecutado. Esta solo se puede usar como la declaración final en una cláusula (al final de cada case).</li></ol></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="cee0d46a-9ded-47b1-8ecd-4a484825f796" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+func main() {
+	// Switch con expresión
+	// También se puede declarar la variable primero fruit := &quot;manzana&quot;
+	switch fruit := &quot;manzana&quot;; fruit {
+	case &quot;manzana&quot;:
+		fmt.Println(&quot;Es una manzana&quot;)
+	case &quot;pera&quot;:
+		fmt.Println(&quot;Es una pera&quot;)
+	default:
+		fmt.Println(&quot;No es una fruta&quot;)
+	} // Es una manzana
+
+	// Switch sin expresión
+	number := 10
+	switch {
+	case number &lt; 0:
+		fmt.Println(&quot;Es negativo&quot;)
+	case number &gt; 0 &amp;&amp; number &lt; 100:
+		fmt.Println(&quot;Es positivo&quot;)
+	default:
+		fmt.Println(&quot;Es cero&quot;)
+	}
+
+	// Switch con múltiples valores en un caso
+	day := &quot;lunes&quot;
+	switch day {
+	case &quot;lunes&quot;, &quot;martes&quot;, &quot;miercoles&quot;, &quot;jueves&quot;, &quot;viernes&quot;:
+		fmt.Println(&quot;Es un día laboral&quot;)
+	case &quot;sabado&quot;, &quot;domingo&quot;:
+		fmt.Println(&quot;Es un día de fin de semana&quot;)
+	default:
+		fmt.Println(&quot;No es un día válido&quot;)
+	}
+
+	// Switch con tipo de dato
+	var data interface{}
+	data = &quot;Hola&quot;
+
+	switch data.(type) {
+	case int:
+		fmt.Println(&quot;Es un entero&quot;)
+	case string:
+		fmt.Println(&quot;Es una cadena&quot;)
+	default:
+		fmt.Println(&quot;Tipo desconocido&quot;)
+	}
+
+	// Switch con fallthrough
+	days := 42
+
+	switch days {
+	case 42:
+		fmt.Println(&quot;42&quot;)
+		fallthrough
+	case 10:
+		fmt.Println(&quot;10&quot;)
+		fallthrough
+	case 20:
+		fmt.Println(&quot;20&quot;)
+	}
+}</code></pre><p id="d77397bf-67bb-4fe0-8721-e3bf159365b1" class="">Las condicionales son una parte muy importante para cualquier programa sin importar el lenguaje de programación ya que nos permite tomar decisiones basadas en ciertas condiciones</p></li></ul><ul id="bba710f7-c3f4-43ee-a342-3f7251bb756a" class="bulleted-list"><li style="list-style-type:circle"><strong>Bucles</strong><ul id="d297d7f7-ebbb-4984-accd-2a5faa9f006d" class="bulleted-list"><li style="list-style-type:square"><strong>For:</strong> Se utilza para repetir N veces un bloque de código o mientras se cumple una condición.</li></ul><ul id="82b96603-433a-4693-94bd-25bb19e09b0f" class="bulleted-list"><li style="list-style-type:square"><strong>For…range:</strong> Se utiliza para iterar sobre elementos de una estructura de datos, como un <code>array</code>, un <code>slice</code>, un <code>map</code> o un <code>string</code>.</li></ul><ul id="b8dcdb6b-6ab5-48ec-bff3-d3452aa34c76" class="bulleted-list"><li style="list-style-type:square"><strong>Break:</strong> Permite salir de un bucle de manera prematura.</li></ul><ul id="5ba95770-9991-4030-a82b-84a1b0f6eaa4" class="bulleted-list"><li style="list-style-type:square"><strong>Continue:</strong> Permite saltar a la siguiente iteración del bucle sin ejecutar del resto de bloque de código.</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="67b212b6-c862-4442-9a0a-9da84d87475f" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+func main() {
+	// Opción 1 [FOR]
+	for i := 0; i &lt; 5; i++ {
+    if i == 2 {
+      continue // Salta a la siguiente iteración si i es igual a 2
+    }
+		fmt.Println(i)
+	}
+
+	// Opción 2 [SIMILAR A WHILE]
+	j := 0
+	for j &lt; 5 {
+		fmt.Println(j)
+		j++
+	}
+
+	// Opción 3 [FOR INFINITO]
+	x := 0
+	for {
+    fmt.Println(x)
+    x++
+    if x == 5 {
+      break // Rompe el bucle cuando i es igual a 5
+    }
+	}
+
+	// Opción 3 [FOR RANGE]
+	numbers := []int{1, 2, 3, 4, 5}
+	for index, value := range numbers {
+		fmt.Println(&quot;Índice:&quot;, index, &quot;Valor:&quot;, value)
+	}
+}</code></pre></li></ul><ul id="72fbc68c-e91e-4f1c-8ff9-95c474414459" class="bulleted-list"><li style="list-style-type:circle"><strong>Otros</strong><ul id="e4d4f3bd-d0df-4abf-b765-dd231db36c96" class="bulleted-list"><li style="list-style-type:square">goto: Permite saltar a una etiqueta específica en el código</li></ul><ul id="b6221b60-5216-4875-a7c5-b8e8857d608d" class="bulleted-list"><li style="list-style-type:square">defer: Se utilza para posponer la ejecución de una función hasta que la función que lo rodea termine.</li></ul><ul id="28cb4e80-38d4-4943-8a69-89608f894524" class="bulleted-list"><li style="list-style-type:square">panic y recover: se utilizan para manejar situaciones excepcionales(<code>pacnic</code>) y recuperarse de ellas(<code>recover</code>)</li></ul></li></ul></li></ul><p id="37f340b7-4f75-4411-b4fb-d90f9f4ea6b6" class="">
+</p></div></details><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">4. Tarea</summary><div class="indented"><ol type="1" id="95ae30da-ecc6-476c-bb73-d5f9070b2f3f" class="numbered-list" start="1"><li>Escribe un programa en Go que imprima los números pares del 1 al 20.</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="31ab23f8-23d3-4a5f-a996-4ca811aca22c" class="code"><code class="language-Go">// Solución
+package main
+import &quot;fmt&quot;
+
+func main() {
+	for i := 1; i &lt;= 20; i++ {
+		if i%2 == 0 {
+			fmt.Println(i)
+		}
+	}
+}</code></pre><ol type="1" id="90dbc6ca-7853-469c-bec4-4ce548bcd9c4" class="numbered-list" start="2"><li>Escribe un programa en Go que imprima los números del 1 al 100, pero para los múltiplos de 3 imprima &quot;Fizz&quot;, para los múltiplos de 5 imprima &quot;Buzz&quot; y para los múltiplos de ambos 3 y 5 imprima &quot;FizzBuzz&quot;.</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="13627121-7d1f-49b7-a7c9-9deb119e6bcd" class="code"><code class="language-Go">// Solución
+package main
+import &quot;fmt&quot;
+
+func main() {
+	for i := 1; i &lt;= 100; i++ {
+		if i%3 == 0 &amp;&amp; i%5 == 0 {
+			fmt.Println(&quot;FizzBuzz&quot;)
+		} else if i%3 == 0 {
+			fmt.Println(&quot;Fizz&quot;)
+		} else if i%5 == 0 {
+			fmt.Println(&quot;Buzz&quot;)
+		} else {
+			fmt.Println(i)
+		}
+	}
+}</code></pre></div></details><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">5. Recursos</summary><div class="indented"><ul id="644a9825-d6a4-416b-82be-eccedd5aeea2" class="bulleted-list"><li style="list-style-type:disc">Structs, Slices, Maps: <a href="https://go.dev/tour/moretypes/1">https://go.dev/tour/moretypes/1</a></li></ul><ul id="291b4a6e-0e31-4e65-bdbd-07c0b5850abe" class="bulleted-list"><li style="list-style-type:disc">Control de flujos: <a href="https://go.dev/tour/flowcontrol/1">https://go.dev/tour/flowcontrol/1</a></li></ul><ul id="3172575f-004e-4d11-aa2e-fffbc9d83bc8" class="bulleted-list"><li style="list-style-type:disc">Arrays and Slices: <a href="https://golangbot.com/arrays-and-slices/">https://golangbot.com/arrays-and-slices/</a></li></ul><ul id="55864c93-a9c5-40e4-8d53-7c7cd0e74729" class="bulleted-list"><li style="list-style-type:disc">If else statement: <a href="https://golangbot.com/if-statement/">https://golangbot.com/if-statement/</a></li></ul><ul id="ad6e20db-628d-4d71-a845-cb8840797b26" class="bulleted-list"><li style="list-style-type:disc">Ciclos o Bucles: <a href="https://coffeebytes.dev/go-ciclos-o-bucles-for-break-continue-defer-if-y-else/">https://coffeebytes.dev/go-ciclos-o-bucles-for-break-continue-defer-if-y-else/</a></li></ul><ul id="9c7e099f-9ce3-4349-bdc6-fdc870f561ac" class="bulleted-list"><li style="list-style-type:disc">Arrays: <a href="https://oregoom.com/go/arrays/">https://oregoom.com/go/arrays/</a></li></ul><ul id="01736d81-a0a6-4bd7-ba33-5801bfa1931f" class="bulleted-list"><li style="list-style-type:disc">Slices: <a href="https://oregoom.com/go/slices/">https://oregoom.com/go/slices/</a></li></ul></div></details></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
