@@ -1,0 +1,944 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Clase 5: Manejo de errores y excepciones</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body style="padding: 0 1rem;"><article id="6491a1cb-7910-4b31-953a-5e7164ffc038" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">5️⃣</span></div><h1 class="page-title">Clase 5: Manejo de errores y excepciones</h1><p class="page-description"></p></header><div class="page-body"><hr id="1e37699e-7538-42f3-87a4-8f30d92b6c0e"/><details open><summary style="font-weight:600;font-size:1.5em;line-height:1.3;margin:0">Objetivos</summary><div class="indented"><ol type="1" id="64e34117-ad29-4b2d-bf3a-52fb389a30ca" class="numbered-list" start="1"><li>Implementar un manejo adecuado de errores y excepciones en Go para garantizar la robustez y confiabilidad del programa.</li></ol><ol type="1" id="77bc2d47-4890-4167-b7f8-66e6b115bcb8" class="numbered-list" start="2"><li>Utilizar las sentencias &quot;defer&quot; y &quot;panic/recover&quot; de manera efectiva en Go para mejorar la legibilidad y la gestión de errores en el código.</li></ol><ol type="1" id="5a370e83-8a97-4f81-865c-73e7a66ec3cf" class="numbered-list" start="3"><li>Crear errores personalizados en Go para proporcionar información específica y detallada sobre situaciones excepcionales o fallos en el programa.</li></ol></div></details><hr id="eaa593dc-ae8b-4480-9824-b505cd297369"/><h2 style="margin-bottom: 1rem;" id="261377ce-202a-40f3-a430-02e2a8553944" class="">Contenido de la clase:</h2><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">1. Tratamiento de errores y excepciones en Go</summary><div class="indented"><p id="b08a0be8-21ba-4640-b879-8f6b1c0373a2" class="">La gestión de errores o tratamiento de errores es una de las cosas con la que los programadores nos encontramos todos los días y hay que darle la importancia que merece. </p><p id="48735c37-4d49-4b69-9aa6-99e3681ed42c" class="">Mientras escribes un programa, se ha de tener en cuenta las distintas formas en que se puede producir errores en los programas y debemos administrarlos correctamente. Los usuarios no necesitan ver un error de seguimiento de la pila largo y confuso. Es mejor si ven información significativa sobre lo que salió mal.</p><ul id="f7cbd9d4-abc7-4c01-98e3-68a5fe1e8b9a" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid"><strong>Go, un lenguaje sin exepciones</strong></span><p id="1cd2e826-5761-4ca4-9f4c-1ee66c7de259" class="">A diferencia de otros lenguajes de programación como Java o Python, no existe un sistema de excepciones tradicional. En su lugar, Go utiliza el enfoque de manejo de errores basado en el tipo <code>error</code> y las sentencias <code>panic</code> y <code>recover</code>. para administrar un comportamiento inesperado en los programas.</p><p id="cfc2a79d-8912-4490-850c-0e9625b6dbe9" class="">La razón principal detrás de esta decisión de diseño en Go fue simplificar y fomentar un código más limpio y legible. En lugar de utilizar bloques de <code>try-catch</code> para manejar excepciones, Go se enfoca en el manejo explícito de errores de tipo <code>error</code>.</p><p id="6e893540-149f-437a-bba3-7a541eff7af9" class="">Los valores de tipo <code>error</code> pueden ser retornados por funciones y verificados utilizando la declaración condicional <code>if</code>. Esto permite un manejo claro y explícito de los errores en el código.</p></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="23f991ac-7212-4235-872a-5715478c6d4d" class="code"><code class="language-Go">package main
+import (
+	&quot;fmt&quot;
+	&quot;strconv&quot;
+)
+
+func main() {
+	var age string
+	fmt.Println(&quot;Ingresa tu edad: &quot;)
+	fmt.Scanln(&amp;age)
+
+	// Convertimos string a entero
+	// la función strconv.Atoi devuelve dos valores, un entero y un error
+	newAge, err := strconv.Atoi(age)
+
+	// Si el error es nil no existe un error
+	// nil == null
+	if err != nil {
+		fmt.Println(&quot;Ocurrió un error: &quot;)
+		fmt.Println(err)
+	} else {
+		fmt.Println(&quot;Tu edad en 10 años será: &quot;, newAge+10)
+	}
+}</code></pre></div></details><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">2. Uso de la sentencia “defer” y “panic/recover”</summary><div class="indented"><ul id="606a05b8-fe71-48df-a018-dbb09c0a027c" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid"><strong>Defer</strong></span><p id="563f351c-3d85-487a-9882-72e11580caa8" class="">Defer es una característica que permite que Go aplace la ejecución de una función. Este puede ser por ejemplo cuando otra función termina de ejecutarse.</p><p id="95fb122e-8f64-485f-a5d6-46244c5efad9" class="">El aplazamiento de funciones es generalmente utilizado para realizar tareas de limpieza, una vez que se han completado las actividades a realizar por parte del algoritmo, como cerrar conexiones a bases de datos, borrar archivos temporales, limpiar el caché, liberar la memoria, etc.</p><p id="a1001c35-56e2-446d-8a5f-660ae658fccc" class="">Supongamos ahora que deseamos conectarnos a una base de datos, y queremos que después de todas las operaciones se realice automáticamente la desconexión, independientemente del flujo de trabajo.</p></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="30c12372-899d-499b-9340-9e4023ffa4c5" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+func conectar() {
+	fmt.Println(&quot;Se ha conectado a la base de datos&quot;)
+}
+
+func desconectar() {
+	fmt.Println(&quot;Se ha desconectado de la base de datos&quot;)
+}
+
+func leer() {
+	fmt.Println(&quot;Se han leido los registros de la base de datos&quot;)
+}
+
+func actualizar() {
+	fmt.Println(&quot;Se han actalizado registros de la base de datos&quot;)
+}
+
+func main() {
+	conectar() // Se ejecuta 1°
+	defer desconectar() // Se ejecuta 4° [último]
+	leer() // Se ejecuta 2°
+	actualizar() // Se ejecuta 3°
+}</code></pre><ul id="35b56558-d551-46d2-b2f0-37a4ad122e1a" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid"><strong>Panic</strong></span><p id="7b217bc3-766d-47c8-8d84-59d4a590499b" class="">En Go existe una función llamda <code>panic</code> que detiene el flujo de un programa e inicia un proceso de pánico. No es quizás una buena idea su uso, debido a que detener la ejecución del programa no ofrece ninguna salida posible.</p><p id="557b436b-e43b-488a-a5dd-86e861681d47" class="">No se recomienda el uso de <code>panic</code> al menos que exista una serie de condiciones en las cuales el sistema no se pueda recuperar tales como:</p><ul id="8bcb1f1a-e578-4043-95fa-f5827c45b004" class="bulleted-list"><li style="list-style-type:circle">Si el sistema continua su ejecución, más problemas serán generados, por lo que hay que detenerlo inmediatamente.</li></ul><ul id="7008fdc7-6d98-409d-8c23-f20282491083" class="bulleted-list"><li style="list-style-type:circle">Existe un escenario que no ha sido cubierto y no se puede manejar, por ende hay que evitarlo.</li></ul></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="02da4ea2-ba2f-408a-aae6-3ff361c7dc61" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+func main() {
+	var availableMoney float64 = 1000
+	var cash float64
+
+	for {
+		fmt.Println(&quot;¿Cuánto dinero deseas retirar?&quot;)
+		fmt.Scanln(&amp;cash)
+
+		if availableMoney &lt; cash {
+			// fmt.Println(&quot;No hay fondos disponibles&quot;)
+			panic(&quot;Su tarjeta ha sido bloqueada&quot;)
+		}
+		availableMoney -= cash
+		fmt.Printf(&quot;Se retiró %.2f, saldo disponible %.2f \n&quot;, cash, availableMoney)
+	}
+}</code></pre><ul id="e15916ae-d79c-45aa-a18b-dea88e813202" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid"><strong>Recover</strong></span><p id="e4c226e4-8bce-4b0e-a010-f52fbdf542b8" class="">En Go, la función <code>recover</code> se utiliza en combinación con la sentencia <code>defer</code> para capturar y manejar un <code>panic</code> ocurrido durante la ejecución de un programa.</p><p id="17d54d1a-34df-4b11-b93c-93d0eacbd125" class="">Cuando se produce un <code>panic</code> en una función, normalmente la ejecución se detiene. La función <code>recover</code> permite recuperarse del <code>panic</code> y continuar con la ejecución del programa en un estado controlado.</p></li></ul><ol type="1" id="8b0d4c46-2eed-4289-bc83-7fafc2fa587c" class="numbered-list" start="1"><li><strong>Refactorizamos</strong></li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="ee3803af-d7c9-43e5-98cf-9c7a4fc4d8d1" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+func myAccount() {
+	var availableMoney float64 = 1000
+	var cash float64
+
+	for {
+		fmt.Println(&quot;¿Cuánto dinero deseas retirar?&quot;)
+		fmt.Scanln(&amp;cash)
+
+		if availableMoney &lt; cash {
+			panic(&quot;blockCard&quot;)
+		}
+		availableMoney -= cash
+		fmt.Printf(&quot;Se retiró %.2f, saldo disponible %.2f \n&quot;, cash, availableMoney)
+	}
+}
+
+func main() {
+	myAccount()
+	fmt.Println(&quot;Finalizó la operación&quot;)
+}</code></pre><ol type="1" id="a2927b93-e043-4e4e-ba36-5274fd5a7e69" class="numbered-list" start="2"><li>Creamos la función handlePanic()</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="cbb2ab68-9dca-4151-96d3-fa8750a05b8d" class="code"><code class="language-Go">func blockCard() {
+	r := recover()
+	if r != nil {
+		fmt.Println(r)
+		fmt.Println(&quot;Bloquea la tarjeta&quot;)
+		fmt.Println(&quot;Contacta al cliente por teléfono&quot;)
+
+	}
+}</code></pre><ol type="1" id="a758cd6f-452d-464e-babb-734d3f8db299" class="numbered-list" start="3"><li>Utilizamos la función handlePanic() en la función myAccount()</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="84dd80bb-ab28-405b-ae90-5b9e3f966e23" class="code"><code class="language-Go">func myAccount() {
+	defer handlePanic()
+	var availableMoney float64 = 1000
+	var cash float64
+
+	for {
+		fmt.Println(&quot;¿Cuánto dinero deseas retirar?&quot;)
+		fmt.Scanln(&amp;cash)
+
+		if availableMoney &lt; cash {
+			// fmt.Println(&quot;No hay fondos disponibles&quot;)
+			panic(&quot;blockCard&quot;)
+		}
+		availableMoney -= cash
+		fmt.Printf(&quot;Se retiró %.2f, saldo disponible %.2f \n&quot;, cash, availableMoney)
+	}
+}</code></pre><ol type="1" id="87a8278b-4196-4f3d-bf30-9e239127797d" class="numbered-list" start="4"><li>Código Final</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="e43da68e-7558-4b53-ac87-b7b5988bc49a" class="code"><code class="language-Go">package main
+import &quot;fmt&quot;
+
+func handlePanic() {
+	r := recover()
+	if r != nil {
+		fmt.Println(r)
+		fmt.Println(&quot;Bloquea la tarjeta&quot;)
+		fmt.Println(&quot;Contacta al cliente por teléfono&quot;)
+
+	}
+}
+
+func myAccount() {
+	defer handlePanic()
+	var availableMoney float64 = 1000
+	var cash float64
+
+	for {
+		fmt.Println(&quot;¿Cuánto dinero deseas retirar?&quot;)
+		fmt.Scanln(&amp;cash)
+
+		if availableMoney &lt; cash {
+			panic(&quot;blockCard&quot;)
+		}
+		availableMoney -= cash
+		fmt.Printf(&quot;Se retiró %.2f, saldo disponible %.2f \n&quot;, cash, availableMoney)
+	}
+}
+
+func main() {
+	myAccount()
+	fmt.Println(&quot;Finalizó la transacción&quot;)
+}</code></pre><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="61c82a5d-608e-4e41-bda0-7eb41ec7a74e"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">Más información: <a href="https://go101.org/article/panic-and-recover-more.html">https://go101.org/article/panic-and-recover-more.html</a></div></figure></div></details><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">3. Creación de errores personalizados</summary><div class="indented"><p id="020b1ba8-8894-4b41-93d1-2791dd6cb753" class="">Go ofrece dos métodos para crear errores en la biblioteca estándar: <code>errors.New</code> y <code>fmt.Errorf</code>.</p><p id="be3b47ac-b0e9-405e-bcb5-f093495459b0" class="">La creación de errores personalizados puede ser útil en varias situaciones</p><ul id="b41f7b32-ee70-48e8-9619-3352589b8dd2" class="bulleted-list"><li style="list-style-type:disc">Comunicar información específica: Al crear tus propios errores personalizados, puedes proporcionar mensajes de error más descriptivos y relevantes para tu aplicación. Esto ayuda a los desarrolladores y usuarios a comprender mejor la causa del error y cómo solucionarlo.</li></ul><ul id="79fd41bd-ac28-4707-8dae-646cc809debf" class="bulleted-list"><li style="list-style-type:disc">Tratamiento de errores específicos: Puedes tener un mayor control sobre cómo se manejan y se progagan en tu programa. Puedes utilizar distintos tipos de errores personalizados para representar situaciones diferentes y tomar decisiones específicas según el tipo de error.</li></ul><ul id="2a5ce5f8-405d-4ba2-ac18-fdf9026de5c8" class="bulleted-list"><li style="list-style-type:disc">Mejorar la legibilidad y mantenibilidad del codigo: Puedes darle nombres descriptivos y utilizamos en tu código de manera semántica, lo que facilita la compresión y el seguimiento del flujo del programa.</li></ul><ol type="1" id="d4c6ad45-10ab-4932-aaa6-d5a38f8fed6b" class="numbered-list" start="1"><li>Ejemplo básico</li></ol><p id="fac383d1-c812-46d2-84a4-b5acb63b4f51" class="">La función <code>errors.New</code> es una función proporcionada por el paquete <code>errors</code> en Go. Su propósito es crear un nuevo error con un mensaje de texto específico.</p><p id="a95923cb-4ee1-48ed-b901-6372e35cf69b" class="">Esta función recibe como argumento un <code>string</code> que representa el mensaje de error que se desea asociar al nuevo error creado. Devuelve un valor de tipo <code>error</code>, que es una interfaz en Go utilizada para representar errores.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="5da4ee56-4d0f-4759-9261-fb5577d968b4" class="code"><code class="language-Go">package main
+import (
+	&quot;errors&quot;
+	&quot;fmt&quot;
+)
+
+func main() {
+	// err := fmt.Errorf(&quot;Error generado con fmt&quot;)
+	err := errors.New(&quot;Error generado durante la ejecución&quot;)
+	if err != nil {
+		fmt.Println(err) // Error generado durante la ejecución
+		fmt.Printf(&quot;%T&quot;, err) // *errors.errorString
+	}
+}</code></pre><ol type="1" id="61b6cdaa-a891-4b02-825a-0ad854f7718a" class="numbered-list" start="2"><li>Ejemplo Intermedio</li></ol><p id="254cf867-0444-48fe-a911-4341aff99397" class="">Utilizamos <code>errors.New</code> en una función que retorna dos valores de tipo <code>int, error</code></p><p id="b45b174c-1469-4a63-83dc-897484715955" class="">Creamos una función que retorna la división de dos números enteros. Sí el divisor es 0, la función debe retornar un error.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="47cc66e8-0351-4f16-947d-03c145135047" class="code"><code class="language-Go">package main
+
+import (
+	&quot;errors&quot;
+	&quot;fmt&quot;
+)
+
+func divide(a, b int) (int, error) {
+	if b == 0 {
+		return 0, errors.New(&quot;División por cero no es posible&quot;)
+	}
+	return a / b, nil
+}
+
+func main() {
+	result, err := divide(10, 0)
+	if err != nil {
+		fmt.Println(&quot;Error:&quot;, err)
+	} else {
+		fmt.Println(&quot;Resultado:&quot;, result)
+	}
+}</code></pre><ol type="1" id="a498bd93-7f4a-4dc7-b523-5c8620b9ab29" class="numbered-list" start="3"><li>Ejemplo Avanzado</li></ol><p id="f14b2928-8886-4b4a-9454-9c06ee75a220" class="">La diferencia entre usar <code>errors.New</code> y crear tu porpio tipo de error con un método <code>Error()</code> radica en la flexibilidad y personalización que deseas tener al crear y manejar errores en Go.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="837e4151-ca5a-4513-a766-6ca0659b3814" class="code"><code class="language-Go">package main
+import (
+	&quot;fmt&quot;
+)
+
+/* 
+Interface implicito - No es necesario declarar esta interface
+type error interface {
+    Error() string
+}
+*/
+
+type MyError struct {
+	message string
+	code    int
+}
+
+func (e MyError) Error() string {
+	return fmt.Sprintf(&quot;Message: %s.\nStatusCode: %d&quot;, e.message, e.code)
+}
+
+func divide(a, b int) (int, error) {
+	if b == 0 {
+		return 0, MyError{message: &quot;División por cero no es posible&quot;, code: 400}
+	}
+	return a / b, nil
+}
+
+func main() {
+	result, err := divide(10, 0)
+	if err != nil {
+		fmt.Println(&quot;Error:&quot;, err)
+	} else {
+		fmt.Println(&quot;Resultado:&quot;, result)
+	}
+}</code></pre></div></details><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">4. Tarea</summary><div class="indented"><ol type="1" id="4016d97c-bac2-421e-9ec3-9615c03be523" class="numbered-list" start="1"><li>Escribe una función llamada <code>SearchName</code> que reciba un slice de nombres y un nombre objetivo. La función debe buscar el nombre objetivo en el slice y devolver su índice si se encuentra. Si el nombre no se encuentra, la función debe devolver un error personalizado del tipo <code>NotFound</code>.</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1be376ee-5b2c-48f4-b4e6-3a23de0d43d1" class="code"><code class="language-Go">// Solución
+package main
+import &quot;fmt&quot;
+
+type NotFound struct {
+	message string
+}
+
+func (e *NotFound) Error() string {
+	return fmt.Sprintf(&quot;Error: el nombre &#x27;%s&#x27; no se encontró en la lista&quot;, e.message)
+}
+
+func SearchName(list []string, name string) (int, error) {
+	for i, nombre := range list {
+		if nombre == name {
+			return i, nil
+		}
+	}
+	return 0, &amp;NotFound{message: name}
+}
+
+func main() {
+	list := []string{&quot;Juan&quot;, &quot;María&quot;, &quot;Pedro&quot;, &quot;Ana&quot;}
+	name := &quot;Pedro&quot;
+
+	index, err := SearchName(list, name)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Printf(&quot;El nombre &#x27;%s&#x27; se encontró en el índice %d\n&quot;, name, index)
+	}
+}</code></pre><ol type="1" id="6b1ce99b-18b3-49df-a833-88d4d2f5bdcc" class="numbered-list" start="2"><li>Escribe una función llamada <code>validatePositive</code> que reciba un número entero y verifique si es un número positivo. Si el número es positivo, la función debe retornar <code>true</code>. Si el número es negativo o cero, la función debe retornar un error indicando que el número no es válido.</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2f13f6c0-41e8-4b93-b260-6a1c7d1fac65" class="code"><code class="language-Go">// Solución
+package main
+import (
+	&quot;errors&quot;
+	&quot;fmt&quot;
+)
+
+func validatePositive(num int) (bool, error) {
+	if num &lt;= 0 {
+		return false, errors.New(&quot;El número no es válido&quot;)
+	}
+	return true, nil
+}
+
+func main() {
+	number := 42
+
+	valid, err := validatePositive(number)
+	if err != nil {
+		fmt.Println(&quot;Error:&quot;, err)
+	} else {
+		fmt.Println(&quot;El número es válido:&quot;, valid)
+	}
+}</code></pre></div></details><details ><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">5. Recursos</summary><div class="indented"><ul id="f2413e22-6fa4-4b95-a9b1-01edac6de2f5" class="bulleted-list"><li style="list-style-type:disc">Manejo de Errores: <a href="https://apuntes.de/golang/manejo-de-errores/">https://apuntes.de/golang/manejo-de-errores/</a></li></ul><ul id="ae5e2c8f-a074-4249-a3cd-2c9523699ebd" class="bulleted-list"><li style="list-style-type:disc">Panic: <a href="https://apuntes.de/golang/panic/">https://apuntes.de/golang/panic/</a></li></ul><ul id="49afc5c7-91eb-4a8b-8a2f-7030f9472473" class="bulleted-list"><li style="list-style-type:disc">Como manejar errores en Go: <a href="https://www.digitalocean.com/community/tutorials/handling-errors-in-go-es">https://www.digitalocean.com/community/tutorials/handling-errors-in-go-es</a></li></ul><ul id="0e308582-3308-4106-8c74-7a7299da522f" class="bulleted-list"><li style="list-style-type:disc">Gestión de errores en Golang: <a href="https://blog.friendsofgo.tech/posts/gestion-de-errores-en-golang/">https://blog.friendsofgo.tech/posts/gestion-de-errores-en-golang/</a></li></ul><ul id="f54434bd-3f68-443d-891b-03173fa58a65" class="bulleted-list"><li style="list-style-type:disc">Manejo de errores en go: <a href="https://steemit.com/cervantes/@orlmicron/manejo-de-errores-en-go-golang">https://steemit.com/cervantes/@orlmicron/manejo-de-errores-en-go-golang</a></li></ul></div></details></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
